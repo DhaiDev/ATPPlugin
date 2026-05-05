@@ -1,0 +1,571 @@
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
+
+using AutoCount.Data;
+
+using DevExpress.Utils;
+using DevExpress.XtraEditors;
+using DevExpress.XtraNavBar;
+using DevExpress.XtraTab;
+using DevExpress.XtraTab.ViewInfo;
+
+namespace ATPShadowMain
+{
+    /// <summary>
+    /// Tabbed dev shell — left NavBar + top XtraTabControl + content panel.
+    /// Click nav -> open existing form embedded inside a new tab page (TopLevel=false,
+    /// FormBorderStyle=None, Dock=Fill). Plugin form code is NOT modified — every form
+    /// is hosted as-is. Switching tabs is instant (no reload). Each tab has an X to close
+    /// and dispose the embedded form. The first tab "Master Menu" is permanent.
+    /// </summary>
+    public partial class ShadowLauncherV2_Form : XtraForm
+    {
+        private readonly DBSetting _db;
+
+        // chrome
+        private PanelControl _topBar;
+        private LabelControl _lblBreadcrumb;
+        private SimpleButton _btnRefresh;
+        private NavBarControl _nav;
+        private XtraTabControl _tabs;
+        private LabelControl _lblStatus;
+
+        // tab tracking — entry-title -> page so we don't reopen duplicates
+        private readonly Dictionary<string, XtraTabPage> _openTabs =
+            new Dictionary<string, XtraTabPage>(StringComparer.OrdinalIgnoreCase);
+        private XtraTabPage _masterTab;
+
+        // dashboard state
+        private LabelControl[] _kpiValues = new LabelControl[5];
+        private static readonly string[] KPI_TABLES =
+            { "zSCP_ServiceContract", "zSCP_ServiceItem", "zSCP_ServiceNote", "zSCP_Appointment", "zSCP_MeterTrans" };
+        private static readonly string[] KPI_LABELS =
+            { "Service Contracts", "Service Items", "Service Notes", "Appointments", "Meter Readings" };
+        private static readonly Color[] KPI_COLORS = {
+            Color.FromArgb(33, 150, 243),   // blue
+            Color.FromArgb(76, 175, 80),    // green
+            Color.FromArgb(255, 152, 0),    // orange
+            Color.FromArgb(156, 39, 176),   // purple
+            Color.FromArgb(244, 67, 54)     // red
+        };
+
+        // colors (inspired by the WMS Sync Hub mockup)
+        private static readonly Color CLR_TOPBAR  = Color.FromArgb(124, 179, 66);    // green
+        private static readonly Color CLR_NAVBG   = Color.FromArgb(56, 69, 82);      // dark navy
+        private static readonly Color CLR_NAVTXT  = Color.White;
+
+        public ShadowLauncherV2_Form() { InitializeComponent(); }
+
+        public ShadowLauncherV2_Form(DBSetting db) : this()
+        {
+            _db = db;
+            BuildChrome();
+            BuildNav();
+            BuildMasterTab();
+        }
+
+        // ============================================================
+        // Layout
+        // ============================================================
+        private void BuildChrome()
+        {
+            this.Text = "ATP Shadow Launcher V2 (tabbed)";
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.ClientSize = new Size(1280, 800);
+            this.MinimumSize = new Size(1024, 640);
+            this.WindowState = FormWindowState.Maximized;
+
+            // ---- top bar ----
+            this._topBar = new PanelControl();
+            this._topBar.Dock = DockStyle.Top;
+            this._topBar.Height = 50;
+            this._topBar.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this._topBar.Appearance.BackColor = CLR_TOPBAR;
+            this._topBar.Appearance.Options.UseBackColor = true;
+
+            this._lblBreadcrumb = new LabelControl();
+            this._lblBreadcrumb.Text = "ATP  /  Master Menu";
+            this._lblBreadcrumb.Appearance.Font = new Font("Tahoma", 14F, FontStyle.Bold);
+            this._lblBreadcrumb.Appearance.ForeColor = Color.White;
+            this._lblBreadcrumb.Appearance.BackColor = Color.Transparent;
+            this._lblBreadcrumb.Appearance.Options.UseFont = true;
+            this._lblBreadcrumb.Appearance.Options.UseForeColor = true;
+            this._lblBreadcrumb.Appearance.Options.UseBackColor = true;
+            this._lblBreadcrumb.Location = new Point(20, 14);
+            this._lblBreadcrumb.AutoSizeMode = LabelAutoSizeMode.None;
+            this._lblBreadcrumb.Size = new Size(900, 28);
+
+            this._btnRefresh = new SimpleButton();
+            this._btnRefresh.Text = "Refresh";
+            this._btnRefresh.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            this._btnRefresh.Size = new Size(90, 28);
+            this._btnRefresh.Location = new Point(this._topBar.Width - 110, 11);
+            this._btnRefresh.Click += new EventHandler(OnRefreshClicked);
+
+            this._topBar.Controls.Add(this._lblBreadcrumb);
+            this._topBar.Controls.Add(this._btnRefresh);
+
+            // ---- left nav ----
+            this._nav = new NavBarControl();
+            this._nav.Dock = DockStyle.Left;
+            this._nav.Width = 240;
+            this._nav.PaintStyleKind = NavBarViewKind.NavigationPane;
+            this._nav.OptionsNavPane.ExpandedWidth = 240;
+            this._nav.OptionsNavPane.ShowExpandButton = false;
+            this._nav.OptionsNavPane.ShowOverflowButton = false;
+            this._nav.LinkClicked += new NavBarLinkEventHandler(OnNavLinkClicked);
+
+            // ---- tab control ----
+            this._tabs = new XtraTabControl();
+            this._tabs.Dock = DockStyle.Fill;
+            this._tabs.HeaderLocation = TabHeaderLocation.Top;
+            this._tabs.HeaderOrientation = TabOrientation.Horizontal;
+            this._tabs.ClosePageButtonShowMode = ClosePageButtonShowMode.InActiveTabPageHeader;
+            this._tabs.ShowTabHeader = DefaultBoolean.True;
+            this._tabs.CloseButtonClick += new EventHandler(OnTabCloseClicked);
+            this._tabs.SelectedPageChanged += new TabPageChangedEventHandler(OnTabChanged);
+
+            // ---- status bar ----
+            this._lblStatus = new LabelControl();
+            this._lblStatus.Dock = DockStyle.Bottom;
+            this._lblStatus.Height = 22;
+            this._lblStatus.AutoSizeMode = LabelAutoSizeMode.None;
+            this._lblStatus.Appearance.BackColor = Color.FromArgb(240, 240, 240);
+            this._lblStatus.Appearance.ForeColor = Color.FromArgb(60, 60, 60);
+            this._lblStatus.Appearance.Options.UseBackColor = true;
+            this._lblStatus.Appearance.Options.UseForeColor = true;
+            this._lblStatus.Appearance.Options.UseTextOptions = true;
+            this._lblStatus.Appearance.TextOptions.HAlignment = HorzAlignment.Near;
+            this._lblStatus.Padding = new Padding(8, 4, 0, 0);
+            this._lblStatus.Text = BuildStatusText();
+
+            // Add in correct Z-order so docks compose properly
+            this.Controls.Add(this._tabs);     // fills last so it gets remaining space
+            this.Controls.Add(this._nav);      // left
+            this.Controls.Add(this._topBar);   // top
+            this.Controls.Add(this._lblStatus);// bottom
+        }
+
+        private string BuildStatusText()
+        {
+            string user = AutoCount.Authentication.UserSession.CurrentUserSession != null
+                ? AutoCount.Authentication.UserSession.CurrentUserSession.LoginUserID
+                : "(none)";
+            string srv = _db != null ? _db.ServerName : "(none)";
+            string dbName = _db != null ? _db.DBName : "(none)";
+            int openCount = _openTabs != null ? _openTabs.Count : 0;
+            return string.Format("User: {0}    DB: {1} @ {2}    Open tabs: {3}",
+                user, dbName, srv, openCount);
+        }
+
+        // ============================================================
+        // Nav
+        // ============================================================
+        private void BuildNav()
+        {
+            List<CatalogEntry> entries = FormCatalog.All();
+            Dictionary<string, NavBarGroup> groups = new Dictionary<string, NavBarGroup>();
+
+            foreach (CatalogEntry entry in entries)
+            {
+                NavBarGroup grp;
+                if (!groups.TryGetValue(entry.Group, out grp))
+                {
+                    grp = new NavBarGroup(entry.Group);
+                    grp.GroupStyle = NavBarGroupStyle.SmallIconsText;
+                    grp.Expanded = true;
+                    this._nav.Groups.Add(grp);
+                    groups[entry.Group] = grp;
+                }
+
+                NavBarItem item = new NavBarItem(entry.Title);
+                item.Tag = entry;
+                this._nav.Items.Add(item);
+
+                NavBarItemLink link = new NavBarItemLink(item);
+                grp.ItemLinks.Add(link);
+            }
+
+            if (this._nav.Groups.Count > 0) this._nav.ActiveGroup = this._nav.Groups[0];
+        }
+
+        // ============================================================
+        // Master tab — dashboard (KPIs + quick-access tiles)
+        // ============================================================
+        private void BuildMasterTab()
+        {
+            this._masterTab = new XtraTabPage();
+            this._masterTab.Text = "Master Menu";
+            this._masterTab.ShowCloseButton = DefaultBoolean.False;
+
+            PanelControl content = new PanelControl();
+            content.Dock = DockStyle.Fill;
+            content.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            content.Appearance.BackColor = Color.FromArgb(245, 247, 250);
+            content.Appearance.Options.UseBackColor = true;
+            content.AutoScroll = true;
+
+            // ---- Title ----
+            LabelControl title = new LabelControl();
+            title.Text = "Service & Contract Dashboard";
+            title.Appearance.Font = new Font("Tahoma", 18F, FontStyle.Bold);
+            title.Appearance.ForeColor = Color.FromArgb(40, 60, 110);
+            title.Appearance.Options.UseFont = true;
+            title.Appearance.Options.UseForeColor = true;
+            title.Location = new Point(24, 18);
+            title.AutoSizeMode = LabelAutoSizeMode.None;
+            title.Size = new Size(800, 32);
+            content.Controls.Add(title);
+
+            LabelControl subtitle = new LabelControl();
+            subtitle.Text = "Live counts from your AED_ATPLUGIN001 database. Click a tile below for one-click access.";
+            subtitle.Appearance.Font = new Font("Tahoma", 9F);
+            subtitle.Appearance.ForeColor = Color.FromArgb(110, 120, 140);
+            subtitle.Appearance.Options.UseFont = true;
+            subtitle.Appearance.Options.UseForeColor = true;
+            subtitle.Location = new Point(24, 52);
+            subtitle.AutoSizeMode = LabelAutoSizeMode.None;
+            subtitle.Size = new Size(800, 18);
+            content.Controls.Add(subtitle);
+
+            // ---- KPI cards row ----
+            int kpiY = 84;
+            int kpiW = 180;
+            int kpiH = 96;
+            int kpiGap = 14;
+            for (int i = 0; i < KPI_TABLES.Length; i++)
+            {
+                PanelControl card = new PanelControl();
+                card.Location = new Point(24 + i * (kpiW + kpiGap), kpiY);
+                card.Size = new Size(kpiW, kpiH);
+                card.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+                card.Appearance.BackColor = KPI_COLORS[i];
+                card.Appearance.Options.UseBackColor = true;
+
+                LabelControl val = new LabelControl();
+                val.Text = "—";
+                val.Appearance.Font = new Font("Tahoma", 24F, FontStyle.Bold);
+                val.Appearance.ForeColor = Color.White;
+                val.Appearance.BackColor = Color.Transparent;
+                val.Appearance.Options.UseFont = true;
+                val.Appearance.Options.UseForeColor = true;
+                val.Appearance.Options.UseBackColor = true;
+                val.Appearance.Options.UseTextOptions = true;
+                val.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
+                val.Appearance.TextOptions.VAlignment = VertAlignment.Center;
+                val.Location = new Point(0, 12);
+                val.Size = new Size(kpiW, 42);
+                val.AutoSizeMode = LabelAutoSizeMode.None;
+                card.Controls.Add(val);
+                this._kpiValues[i] = val;
+
+                LabelControl cap = new LabelControl();
+                cap.Text = KPI_LABELS[i];
+                cap.Appearance.Font = new Font("Tahoma", 10F);
+                cap.Appearance.ForeColor = Color.White;
+                cap.Appearance.BackColor = Color.Transparent;
+                cap.Appearance.Options.UseFont = true;
+                cap.Appearance.Options.UseForeColor = true;
+                cap.Appearance.Options.UseBackColor = true;
+                cap.Appearance.Options.UseTextOptions = true;
+                cap.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
+                cap.Location = new Point(0, 60);
+                cap.Size = new Size(kpiW, 24);
+                cap.AutoSizeMode = LabelAutoSizeMode.None;
+                card.Controls.Add(cap);
+
+                content.Controls.Add(card);
+            }
+
+            // ---- "Quick Access" section title ----
+            int sectionY = kpiY + kpiH + 28;
+            LabelControl section = new LabelControl();
+            section.Text = "Quick Access";
+            section.Appearance.Font = new Font("Tahoma", 14F, FontStyle.Bold);
+            section.Appearance.ForeColor = Color.FromArgb(40, 60, 110);
+            section.Appearance.Options.UseFont = true;
+            section.Appearance.Options.UseForeColor = true;
+            section.Location = new Point(24, sectionY);
+            section.AutoSizeMode = LabelAutoSizeMode.None;
+            section.Size = new Size(400, 26);
+            content.Controls.Add(section);
+
+            // ---- 6 tiles, 3 per row ----
+            QuickTile[] tiles = new QuickTile[]
+            {
+                new QuickTile("Key Meter Reading",     "Record meter + generate invoice", Color.FromArgb(244, 67, 54),  "Meter Type Trans Entry"),
+                new QuickTile("New Service Note",      "Open a service ticket",           Color.FromArgb(255, 152, 0),  "New Service Note"),
+                new QuickTile("Maintain Service Item", "Browse / edit machines",          Color.FromArgb(33, 150, 243), "Maintain Service Item"),
+                new QuickTile("New Service Contract",  "Set up a billing contract",       Color.FromArgb(76, 175, 80),  "New Service Contract"),
+                new QuickTile("Service Quick View",    "Snapshot inquiry",                Color.FromArgb(96, 125, 139), "Service Quick View"),
+                new QuickTile("Appointment Calendar",  "Today's & upcoming visits",       Color.FromArgb(156, 39, 176), "Appointment Calendar")
+            };
+            int tileY = sectionY + 36;
+            int tileW = 300;
+            int tileH = 88;
+            int tileGap = 14;
+            int cols = 3;
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                int row = i / cols;
+                int col = i % cols;
+                content.Controls.Add(BuildTile(
+                    tiles[i],
+                    new Point(24 + col * (tileW + tileGap), tileY + row * (tileH + tileGap)),
+                    new Size(tileW, tileH)));
+            }
+
+            this._masterTab.Controls.Add(content);
+            this._tabs.TabPages.Add(this._masterTab);
+            this._tabs.SelectedTabPage = this._masterTab;
+
+            RefreshDashboard();
+        }
+
+        private sealed class QuickTile
+        {
+            public string Caption;
+            public string Subtitle;
+            public Color BackColor;
+            public string TargetTitle;
+            public QuickTile(string c, string s, Color bg, string t)
+            { Caption = c; Subtitle = s; BackColor = bg; TargetTitle = t; }
+        }
+
+        private PanelControl BuildTile(QuickTile t, Point loc, Size sz)
+        {
+            PanelControl p = new PanelControl();
+            p.Location = loc;
+            p.Size = sz;
+            p.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            p.Appearance.BackColor = t.BackColor;
+            p.Appearance.Options.UseBackColor = true;
+            p.Cursor = Cursors.Hand;
+
+            LabelControl cap = new LabelControl();
+            cap.Text = t.Caption;
+            cap.Appearance.Font = new Font("Tahoma", 12F, FontStyle.Bold);
+            cap.Appearance.ForeColor = Color.White;
+            cap.Appearance.BackColor = Color.Transparent;
+            cap.Appearance.Options.UseFont = true;
+            cap.Appearance.Options.UseForeColor = true;
+            cap.Appearance.Options.UseBackColor = true;
+            cap.Location = new Point(14, 14);
+            cap.AutoSizeMode = LabelAutoSizeMode.None;
+            cap.Size = new Size(sz.Width - 28, 22);
+            cap.Cursor = Cursors.Hand;
+            p.Controls.Add(cap);
+
+            LabelControl sub = new LabelControl();
+            sub.Text = t.Subtitle;
+            sub.Appearance.Font = new Font("Tahoma", 9F);
+            sub.Appearance.ForeColor = Color.FromArgb(240, 240, 240);
+            sub.Appearance.BackColor = Color.Transparent;
+            sub.Appearance.Options.UseFont = true;
+            sub.Appearance.Options.UseForeColor = true;
+            sub.Appearance.Options.UseBackColor = true;
+            sub.Location = new Point(14, 42);
+            sub.AutoSizeMode = LabelAutoSizeMode.None;
+            sub.Size = new Size(sz.Width - 28, 36);
+            sub.Cursor = Cursors.Hand;
+            p.Controls.Add(sub);
+
+            // Click anywhere on the tile opens the form
+            string target = t.TargetTitle;
+            EventHandler open = new EventHandler((s, e) => OpenByTitle(target));
+            p.Click += open;
+            cap.Click += open;
+            sub.Click += open;
+
+            return p;
+        }
+
+        private void RefreshDashboard()
+        {
+            for (int i = 0; i < KPI_TABLES.Length; i++)
+            {
+                if (this._kpiValues[i] != null)
+                    this._kpiValues[i].Text = SafeCount(KPI_TABLES[i]);
+            }
+        }
+
+        private string SafeCount(string table)
+        {
+            if (_db == null) return "—";
+            try
+            {
+                System.Data.DataTable dt = _db.GetDataTable(
+                    "SELECT COUNT(*) FROM [dbo].[" + table + "]", false);
+                if (dt == null || dt.Rows.Count == 0) return "—";
+                return Convert.ToInt64(dt.Rows[0][0]).ToString("n0");
+            }
+            catch { return "—"; }
+        }
+
+        public void OpenByTitle(string title)
+        {
+            XtraTabPage existing;
+            if (this._openTabs.TryGetValue(title, out existing))
+            {
+                this._tabs.SelectedTabPage = existing;
+                return;
+            }
+            foreach (CatalogEntry entry in FormCatalog.All())
+            {
+                if (string.Equals(entry.Title, title, StringComparison.OrdinalIgnoreCase))
+                {
+                    try
+                    {
+                        Form frm = entry.Create(_db);
+                        if (frm != null) EmbedFormInTab(entry, frm);
+                    }
+                    catch (Exception ex)
+                    {
+                        XtraMessageBox.Show(
+                            "Failed to open '" + title + "':\r\n\r\n" + ex.Message,
+                            "Open Form", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    return;
+                }
+            }
+            XtraMessageBox.Show("No form titled '" + title + "' in catalog.",
+                "Quick Access", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        // ============================================================
+        // Open / close tabs
+        // ============================================================
+        private void OnNavLinkClicked(object sender, NavBarLinkEventArgs e)
+        {
+            CatalogEntry entry = e.Link.Item.Tag as CatalogEntry;
+            if (entry == null) return;
+
+            // Already open? just activate.
+            XtraTabPage existing;
+            if (this._openTabs.TryGetValue(entry.Title, out existing))
+            {
+                this._tabs.SelectedTabPage = existing;
+                return;
+            }
+
+            try
+            {
+                Form frm = entry.Create(_db);
+                if (frm == null) return;
+                EmbedFormInTab(entry, frm);
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show(
+                    "Failed to open '" + entry.Title + "':\r\n\r\n" + ex.Message,
+                    "Open Form",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void EmbedFormInTab(CatalogEntry entry, Form frm)
+        {
+            // The 3 magic flags that turn a Form into a Control hostable in a panel.
+            frm.TopLevel = false;
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Dock = DockStyle.Fill;
+
+            // Maximized makes no sense embedded — fall back to Normal.
+            if (frm.WindowState == FormWindowState.Maximized)
+                frm.WindowState = FormWindowState.Normal;
+
+            // If the form closes itself (e.g. its own Exit button) we want to also
+            // remove its tab page rather than leave a dead tab around.
+            frm.FormClosed += new FormClosedEventHandler(OnEmbeddedFormClosed);
+
+            XtraTabPage page = new XtraTabPage();
+            page.Text = entry.Title;
+            page.ShowCloseButton = DefaultBoolean.True;
+            page.Tag = frm;
+            page.Controls.Add(frm);
+            frm.Show();   // makes it visible inside the panel
+
+            this._tabs.TabPages.Add(page);
+            this._openTabs[entry.Title] = page;
+            this._tabs.SelectedTabPage = page;
+
+            this._lblStatus.Text = BuildStatusText();
+        }
+
+        private void OnTabCloseClicked(object sender, EventArgs e)
+        {
+            ClosePageButtonEventArgs args = e as ClosePageButtonEventArgs;
+            if (args == null) return;
+            XtraTabPage page = args.Page as XtraTabPage;
+            if (page == null || page == this._masterTab) return;
+
+            CloseTab(page);
+        }
+
+        private void CloseTab(XtraTabPage page)
+        {
+            Form frm = page.Tag as Form;
+
+            // Remove from registry first so OnEmbeddedFormClosed doesn't loop.
+            string key = null;
+            foreach (KeyValuePair<string, XtraTabPage> kv in this._openTabs)
+            {
+                if (kv.Value == page) { key = kv.Key; break; }
+            }
+            if (key != null) this._openTabs.Remove(key);
+
+            this._tabs.TabPages.Remove(page);
+
+            if (frm != null && !frm.IsDisposed)
+            {
+                try { frm.FormClosed -= new FormClosedEventHandler(OnEmbeddedFormClosed); } catch { }
+                try { frm.Close(); } catch { }
+                try { frm.Dispose(); } catch { }
+            }
+            page.Dispose();
+
+            this._lblStatus.Text = BuildStatusText();
+        }
+
+        private void OnEmbeddedFormClosed(object sender, FormClosedEventArgs e)
+        {
+            Form frm = sender as Form;
+            if (frm == null) return;
+
+            // Find the matching tab and remove it
+            XtraTabPage owning = null;
+            foreach (XtraTabPage p in this._tabs.TabPages)
+            {
+                if (ReferenceEquals(p.Tag, frm)) { owning = p; break; }
+            }
+            if (owning != null && owning != this._masterTab) CloseTab(owning);
+        }
+
+        private void OnTabChanged(object sender, TabPageChangedEventArgs e)
+        {
+            if (e.Page != null)
+                this._lblBreadcrumb.Text = "ATP  /  " + e.Page.Text;
+            // When user comes back to the Master tab, refresh the KPIs so counts stay live.
+            if (e.Page == this._masterTab) RefreshDashboard();
+        }
+
+        private void OnRefreshClicked(object sender, EventArgs e)
+        {
+            // On Master tab → refresh dashboard counts. On any other tab → nudge the
+            // embedded form to repaint (most grids re-query on their own Activated event).
+            if (this._tabs.SelectedTabPage == this._masterTab)
+            {
+                RefreshDashboard();
+            }
+            else if (this._tabs.SelectedTabPage != null)
+            {
+                this._tabs.SelectedTabPage.Refresh();
+                Form frm = this._tabs.SelectedTabPage.Tag as Form;
+                if (frm != null) try { frm.Refresh(); } catch { }
+            }
+            this._lblStatus.Text = BuildStatusText();
+        }
+    }
+}

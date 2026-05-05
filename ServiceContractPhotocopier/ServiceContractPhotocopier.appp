@@ -1,0 +1,56 @@
+<?xml version="1.0" standalone="yes"?>
+<!--
+  GENERATED from ../PLUGIN_CONFIG.md — do not hand-edit.
+  To change values: edit PLUGIN_CONFIG.md, then ask Claude to regenerate this file.
+  Guid is permanent and must never change after first install.
+-->
+<AutoCount_x0020_Plug-in_x0020_Package_x0020_Project>
+  <Properties>
+    <ProjectFileVersion>1.0</ProjectFileVersion>
+    <Guid>6A996121-169E-4D35-AEED-58CFBB1386B7</Guid>
+    <Name>Service Contract Photocopier</Name>
+    <Version>1.3.0.0</Version>
+    <Manufacturer>RUISIN PLASTIC INDUSTRIES SDN BHD</Manufacturer>
+    <ManufacturerUrl>https://www.newpages.com.my/v2/cn/company/190550/Rui_Sin_Plastic_Industries_Sdn__Bhd_.html</ManufacturerUrl>
+    <Copyright>Copyright ©  2026 RUISIN PLASTIC INDUSTRIES SDN BHD</Copyright>
+    <SalesPhone>0167166663</SalesPhone>
+    <SupportPhone>0167216749</SupportPhone>
+    <Description>This Plugin handles Service &amp; Contract management for the Photocopier business in AutoCount.</Description>
+    <WhatsNew>v1.3.0.0 (2026-05-04):
+1. Meter Type Transaction Entry — Invoice No Format combo now reads from AutoCount's standard DocNoFormat table (DocType "IV") using the [Name] column and auto-selects the IsDefault='T' format on load.
+2. New ellipsis (...) button next to Invoice No Format opens AutoCount's standard FormDocumentNoMaintenance for in-place format management; combo refreshes on close.
+3. The chosen format name is now stamped onto Invoice.DocNoFormatName before the Invoice Entry dialog opens, so AutoCount uses that format's running number for DocNo (matching FormInvoiceEntry behavior).
+4. New ATPShadowMain dev launcher — a NavBar-driven home form replaces the hard-coded single-form launch in Program.cs; lists every plugin form grouped by module so dev iteration no longer requires editing Program.cs.
+
+v1.2.0.0 (2026-04-17):
+1. ServiceItem_Form.Designer.cs rewritten to canonical VS-compatible format — form now opens in Visual Studio Design view.
+2. Tab 7 Meter Type grid column widths re-balanced with ColumnAutoWidth; all 10 columns visible in one view without horizontal scroll.
+3. Grade Code dropdown now populates — new seed migration 04_Seed_zSCP_LK_ServiceItemGrade (A, B, C, REFURB). Job lookup switched from [Job] (absent in AutoCount 2.x) to [Project].
+4. Fill Test Data button now populates every field including Tab 2 More Header and auto-adds one row to each child grid. Guarded against duplicates.
+5. Service Contract: new "Auto (F12)" button next to Contract No — one-click running number.
+6. Bilingual demo guide at Docs/demo-service-module.md with full field-by-field explanation, 18-minute demo script, FAQ.
+
+v1.1.0.0 (2026-04-16):
+1. V8 layout parity for both forms. Full CRUD lifecycle with transactional save/delete, optimistic concurrency, dirty tracking.
+2. Audit columns via migrations v1.2.0 and v1.3.0. ATPCli (atp.exe) CRUD CLI; 52-case regression suite.</WhatsNew>
+    <AssemblyFile>ServiceContractPhotocopier.dll</AssemblyFile>
+    <MinimumAccountingVersion>2.0.2</MinimumAccountingVersion>
+    <ScriptLanguage>C#</ScriptLanguage>
+  </Properties>
+  <Files>
+    <Filename>.\bin\Debug\ServiceContractPhotocopier.dll</Filename>
+    <ExecuteAfterExtracted>false</ExecuteAfterExtracted>
+  </Files>
+  <Files>
+    <Filename>.\bin\Debug\ServiceContractPhotocopier.pdb</Filename>
+    <ExecuteAfterExtracted>false</ExecuteAfterExtracted>
+  </Files>
+  <Files>
+    <Filename>.\bin\Debug\VecTech.ACPluginBase.dll</Filename>
+    <ExecuteAfterExtracted>false</ExecuteAfterExtracted>
+  </Files>
+  <Files>
+    <Filename>.\bin\Debug\VecTech.ACPluginBase.pdb</Filename>
+    <ExecuteAfterExtracted>false</ExecuteAfterExtracted>
+  </Files>
+</AutoCount_x0020_Plug-in_x0020_Package_x0020_Project>

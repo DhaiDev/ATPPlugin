@@ -1,0 +1,40 @@
+<?xml version="1.0" standalone="yes"?>
+<!--
+  MINIMAL .appp template — copy this for new plugins.
+  Replace the {{...}} placeholders. Generate Guid with:
+      powershell -NoProfile -Command "[guid]::NewGuid().ToString().ToUpper()"
+-->
+<AutoCount_x0020_Plug-in_x0020_Package_x0020_Project>
+  <Properties>
+    <ProjectFileVersion>1.0</ProjectFileVersion>
+    <Guid>{{GUID}}</Guid>
+    <Name>{{NAME}}</Name>
+    <Version>1.0.0.0</Version>
+    <Manufacturer>Vec Tech Solutions</Manufacturer>
+    <ManufacturerUrl>https://www.facebook.com/VecTechSolutions</ManufacturerUrl>
+    <Copyright>Copyright ©  2026 Vec Tech Solutions</Copyright>
+    <SalesPhone>+601117758060</SalesPhone>
+    <SupportPhone>+601117758060</SupportPhone>
+    <Description>{{DESCRIPTION}}</Description>
+    <WhatsNew>1. Initial release.</WhatsNew>
+    <AssemblyFile>{{MAIN_DLL}}</AssemblyFile>
+    <MinimumAccountingVersion>2.0.2</MinimumAccountingVersion>
+    <ScriptLanguage>C#</ScriptLanguage>
+  </Properties>
+  <Files>
+    <Filename>.\bin\Debug\{{MAIN_DLL}}</Filename>
+    <ExecuteAfterExtracted>false</ExecuteAfterExtracted>
+  </Files>
+  <Files>
+    <Filename>.\bin\Debug\{{MAIN_PDB}}</Filename>
+    <ExecuteAfterExtracted>false</ExecuteAfterExtracted>
+  </Files>
+  <Files>
+    <Filename>.\bin\Debug\VecTech.ACPluginBase.dll</Filename>
+    <ExecuteAfterExtracted>false</ExecuteAfterExtracted>
+  </Files>
+  <Files>
+    <Filename>.\bin\Debug\VecTech.ACPluginBase.pdb</Filename>
+    <ExecuteAfterExtracted>false</ExecuteAfterExtracted>
+  </Files>
+</AutoCount_x0020_Plug-in_x0020_Package_x0020_Project>

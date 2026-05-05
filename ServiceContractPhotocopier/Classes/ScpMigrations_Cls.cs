@@ -1,0 +1,145 @@
+using System;
+using System.Reflection;
+using AutoCount.Data;
+
+namespace ServiceContractPhotocopier.Classes
+{
+    /// <summary>
+    /// Runs the embedded SQL migration scripts on plugin load. Mirrors the BookHub
+    /// RunEmbeddedSQLScripts pattern: check sysobjects for each target, create if missing.
+    /// Every schema change must have a corresponding .sql file under ServiceContractPhotocopier\SQL
+    /// registered as EmbeddedResource in the csproj.
+    /// </summary>
+    public static class ScpMigrations_Cls
+    {
+        private const string NameSpace = nameof(ServiceContractPhotocopier);
+
+        public static bool RunEmbeddedSQLScripts(DBSetting dbsetting)
+        {
+            Assembly asm = Assembly.GetExecutingAssembly();
+
+            // === Tier 0: shared infrastructure ===
+            RunIfTableMissing(dbsetting, "z_SysConfig",                 "01_CreateTable_z_SysConfig.sql", asm);
+            RunIfTableMissing(dbsetting, "z_SysRef",                    "01_CreateTable_z_SysRef.sql", asm);
+
+            // === Tier 1: lookups ===
+            RunIfTableMissing(dbsetting, "zSCP_LK_ServiceStatus",       "02_CreateTable_zSCP_LK_ServiceStatus.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_LK_ServiceSeverity",     "02_CreateTable_zSCP_LK_ServiceSeverity.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_LK_ServiceSolution",     "02_CreateTable_zSCP_LK_ServiceSolution.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_LK_ServiceProblem",      "02_CreateTable_zSCP_LK_ServiceProblem.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_LK_ServiceType",         "02_CreateTable_zSCP_LK_ServiceType.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_LK_ServiceContractType", "02_CreateTable_zSCP_LK_ServiceContractType.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_LK_ServiceItemGrade",    "02_CreateTable_zSCP_LK_ServiceItemGrade.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_LK_AppointmentType",     "02_CreateTable_zSCP_LK_AppointmentType.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_LK_AppointmentPriority", "02_CreateTable_zSCP_LK_AppointmentPriority.sql", asm);
+
+            // === Tier 2: people ===
+            RunIfTableMissing(dbsetting, "zSCP_ServicePerson",          "02_CreateTable_zSCP_ServicePerson.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_ServiceAdvisor",         "02_CreateTable_zSCP_ServiceAdvisor.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_Mechanic",               "02_CreateTable_zSCP_Mechanic.sql", asm);
+
+            // === Tier 3: meter chain ===
+            RunIfTableMissing(dbsetting, "zSCP_MeterMultiPrice",        "02_CreateTable_zSCP_MeterMultiPrice.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_MeterMultiPriceItem",    "02_CreateTable_zSCP_MeterMultiPriceItem.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_MeterType",              "02_CreateTable_zSCP_MeterType.sql", asm);
+
+            // === Tier 4: service item ===
+            RunIfTableMissing(dbsetting, "zSCP_ServiceItem",            "02_CreateTable_zSCP_ServiceItem.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_ServiceItemMeterType",   "02_CreateTable_zSCP_ServiceItemMeterType.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_ServiceItemDebtorHistory","02_CreateTable_zSCP_ServiceItemDebtorHistory.sql", asm);
+
+            // === Tier 5: meter transactions ===
+            RunIfTableMissing(dbsetting, "zSCP_MeterTrans",             "02_CreateTable_zSCP_MeterTrans.sql", asm);
+
+            // === Tier 6: contract (parent BEFORE ID/SVI/DTL so FKs can link back) ===
+            RunIfTableMissing(dbsetting, "zSCP_ServiceContract",        "02_CreateTable_zSCP_ServiceContract.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_ServiceContractID",      "02_CreateTable_zSCP_ServiceContractID.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_ServiceContractSVI",     "02_CreateTable_zSCP_ServiceContractSVI.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_ServiceContractDTL",     "02_CreateTable_zSCP_ServiceContractDTL.sql", asm);
+
+            // === Tier 7: service note (parent BEFORE ID/DTL) ===
+            RunIfTableMissing(dbsetting, "zSCP_ServiceNote",            "02_CreateTable_zSCP_ServiceNote.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_ServiceNoteID",          "02_CreateTable_zSCP_ServiceNoteID.sql", asm);
+            RunIfTableMissing(dbsetting, "zSCP_ServiceNoteDTL",         "02_CreateTable_zSCP_ServiceNoteDTL.sql", asm);
+
+            // === Tier 8: appointment ===
+            RunIfTableMissing(dbsetting, "zSCP_Appointment",            "02_CreateTable_zSCP_Appointment.sql", asm);
+
+            // === Tier 9: views (always drop-and-recreate) ===
+            RecreateViews(dbsetting, asm);
+
+            // === Tier 10: seed defaults (safe re-run; insert-if-empty) ===
+            try
+            {
+                string seedDDL = ReadEmbeddedSql("04_Seed_zSCP_LK_Defaults.sql", asm);
+                var dbu = DBUtils.Create(dbsetting);
+                dbu.ExecuteDDLText(seedDDL);
+            }
+            catch (Exception ex)
+            {
+                // Non-fatal — seed is best-effort.
+                System.Diagnostics.Debug.WriteLine("ScpMigrations seed failed: " + ex.Message);
+            }
+
+            return true;
+        }
+
+        private static void RunIfTableMissing(DBSetting dbsetting, string tableName, string sqlFile, Assembly asm)
+        {
+            string query = "SELECT COUNT(*) FROM dbo.sysobjects WHERE id = object_id(N'[dbo].["
+                           + tableName + "]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1";
+            object obj = dbsetting.ExecuteScalar(query);
+            if (obj == null || obj == DBNull.Value || Convert.ToInt32(obj) == 0)
+            {
+                string ddl = ReadEmbeddedSql(sqlFile, asm);
+                var dbu = DBUtils.Create(dbsetting);
+                dbu.ExecuteDDLText(ddl);
+            }
+        }
+
+        private static void RecreateViews(DBSetting dbsetting, Assembly asm)
+        {
+            // Drop existing views then create fresh so schema changes propagate.
+            string[] views = new[]
+            {
+                "zvSCP_ServiceContractList",
+                "zvSCP_ServiceNoteList",
+                "zvSCP_ServiceItemList",
+                "zvSCP_AppointmentCalendar",
+                "zvSCP_OutstandingServiceContractItem",
+                "zvSCP_OutstandingServiceNoteAssignment",
+            };
+
+            var dbu = DBUtils.Create(dbsetting);
+            foreach (var v in views)
+            {
+                try
+                {
+                    dbu.ExecuteDDLText("IF OBJECT_ID('dbo." + v + "', 'V') IS NOT NULL DROP VIEW [dbo].[" + v + "]");
+                }
+                catch { /* best-effort drop */ }
+            }
+
+            string viewDDL = ReadEmbeddedSql("03_CreateView_zvSCP_Views.sql", asm);
+            dbu.ExecuteDDLText(viewDDL);
+        }
+
+        private static string ReadEmbeddedSql(string fileName, Assembly asm)
+        {
+            // EmbeddedResource names are <RootNamespace>.<FolderWithDots>.<FileName>
+            string resourceName = NameSpace + ".SQL." + fileName;
+            using (var stream = asm.GetManifestResourceStream(resourceName))
+            {
+                if (stream == null)
+                {
+                    throw new Exception("Embedded SQL resource not found: " + resourceName
+                                        + ". Check that the .sql file is marked as EmbeddedResource in the .csproj.");
+                }
+                using (var reader = new System.IO.StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+    }
+}

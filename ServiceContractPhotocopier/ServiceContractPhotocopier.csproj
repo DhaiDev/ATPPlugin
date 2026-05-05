@@ -1,0 +1,814 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6A996121-169E-4D35-AEED-58CFBB1386B7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ServiceContractPhotocopier</RootNamespace>
+    <AssemblyName>ServiceContractPhotocopier</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>false</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoCount">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AutoCount.Accounting">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Accounting.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AutoCount.Accounting.UI">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Accounting.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AutoCount.MainEntry">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.MainEntry.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AutoCount.Tools">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Tools.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AutoCount.UI">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AutoCount.Sales">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Sales.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AutoCount.GeneralMaint">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.GeneralMaint.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.Data.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.Data.Desktop.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\DevExpress.Data.Desktop.v22.2.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.Drawing.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\DevExpress.Drawing.v22.2.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.Printing.v22.2.Core, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\DevExpress.Printing.v22.2.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.Utils.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraEditors.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraGrid.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraBars.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classes\AccessRightsConsts.cs" />
+    <Compile Include="Classes\BaseForms\ScpLookupEdt_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Classes\BaseForms\ScpLookupLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Classes\BaseForms\ScpPersonEdt_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Classes\BaseForms\ScpPlaceholder_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Classes\PluginMain.cs" />
+    <Compile Include="Classes\ScpMigrations_Cls.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="General Setup\Master Forms\AppointmentPriorityLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\AppointmentPriorityLst_Form.Designer.cs">
+      <DependentUpon>AppointmentPriorityLst_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\AppointmentPriority_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\AppointmentPriority_Form.Designer.cs">
+      <DependentUpon>AppointmentPriority_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\AppointmentTypeLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\AppointmentTypeLst_Form.Designer.cs">
+      <DependentUpon>AppointmentTypeLst_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\AppointmentType_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\AppointmentType_Form.Designer.cs">
+      <DependentUpon>AppointmentType_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\MechanicLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\MechanicLst_Form.Designer.cs">
+      <DependentUpon>MechanicLst_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\Mechanic_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\Mechanic_Form.Designer.cs">
+      <DependentUpon>Mechanic_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\MeterMultiPricingLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\MeterMultiPricingLst_Form.Designer.cs">
+      <DependentUpon>MeterMultiPricingLst_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\MeterMultiPricing_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\MeterMultiPricing_Form.Designer.cs">
+      <DependentUpon>MeterMultiPricing_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\MeterTypeLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\MeterTypeLst_Form.Designer.cs">
+      <DependentUpon>MeterTypeLst_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\MeterType_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\MeterType_Form.Designer.cs">
+      <DependentUpon>MeterType_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceAdvisorLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceAdvisorLst_Form.Designer.cs">
+      <DependentUpon>ServiceAdvisorLst_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceAdvisor_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceAdvisor_Form.Designer.cs">
+      <DependentUpon>ServiceAdvisor_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceContractTypeLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceContractTypeLst_Form.Designer.cs">
+      <DependentUpon>ServiceContractTypeLst_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceContractType_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceContractType_Form.Designer.cs">
+      <DependentUpon>ServiceContractType_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceItemGradeLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceItemGradeLst_Form.Designer.cs">
+      <DependentUpon>ServiceItemGradeLst_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceItemGrade_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceItemGrade_Form.Designer.cs">
+      <DependentUpon>ServiceItemGrade_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceOption_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceOption_Form.Designer.cs">
+      <DependentUpon>ServiceOption_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServicePersonLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServicePersonLst_Form.Designer.cs">
+      <DependentUpon>ServicePersonLst_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServicePerson_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServicePerson_Form.Designer.cs">
+      <DependentUpon>ServicePerson_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceProblemLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceProblemLst_Form.Designer.cs">
+      <DependentUpon>ServiceProblemLst_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceProblem_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceProblem_Form.Designer.cs">
+      <DependentUpon>ServiceProblem_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceSeverityLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceSeverityLst_Form.Designer.cs">
+      <DependentUpon>ServiceSeverityLst_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceSeverity_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceSeverity_Form.Designer.cs">
+      <DependentUpon>ServiceSeverity_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceSolutionLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceSolutionLst_Form.Designer.cs">
+      <DependentUpon>ServiceSolutionLst_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceSolution_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceSolution_Form.Designer.cs">
+      <DependentUpon>ServiceSolution_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceStatusLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceStatusLst_Form.Designer.cs">
+      <DependentUpon>ServiceStatusLst_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceStatus_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceStatus_Form.Designer.cs">
+      <DependentUpon>ServiceStatus_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceTypeLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceTypeLst_Form.Designer.cs">
+      <DependentUpon>ServiceTypeLst_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceType_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General Setup\Master Forms\ServiceType_Form.Designer.cs">
+      <DependentUpon>ServiceType_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Quick View\ServiceQuickView_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Quick View\ServiceQuickView_Form.Designer.cs">
+      <DependentUpon>ServiceQuickView_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Appointment\Operation Forms\AppointmentCalendar_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Appointment\Operation Forms\AppointmentCalendar_Form.Designer.cs">
+      <DependentUpon>AppointmentCalendar_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Appointment\Operation Forms\AppointmentInquiry_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Appointment\Operation Forms\AppointmentInquiry_Form.Designer.cs">
+      <DependentUpon>AppointmentInquiry_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Appointment\Operation Forms\AppointmentLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Appointment\Operation Forms\AppointmentLst_Form.Designer.cs">
+      <DependentUpon>AppointmentLst_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Appointment\Operation Forms\Appointment_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Appointment\Operation Forms\Appointment_Form.Designer.cs">
+      <DependentUpon>Appointment_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Appointment\Operation Forms\MeterTypeTransactionEntry_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Appointment\Operation Forms\MeterTypeTransactionEntry_Form.Designer.cs">
+      <DependentUpon>MeterTypeTransactionEntry_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Appointment\Operation Forms\MeterTypeTransactionList_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Appointment\Operation Forms\MeterTypeTransactionList_Form.Designer.cs">
+      <DependentUpon>MeterTypeTransactionList_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Appointment\Operation Forms\PreventiveMaintenance_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Appointment\Operation Forms\PreventiveMaintenance_Form.Designer.cs">
+      <DependentUpon>PreventiveMaintenance_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Contract\Operation Forms\OutstandingServiceContractItem_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Contract\Operation Forms\OutstandingServiceContractItem_Form.Designer.cs">
+      <DependentUpon>OutstandingServiceContractItem_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Contract\Operation Forms\ServiceContractInquiry_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Contract\Operation Forms\ServiceContractInquiry_Form.Designer.cs">
+      <DependentUpon>ServiceContractInquiry_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Contract\Operation Forms\ServiceContractLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Contract\Operation Forms\ServiceContractLst_Form.Designer.cs">
+      <DependentUpon>ServiceContractLst_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Contract\Operation Forms\ServiceContract_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Contract\Operation Forms\ServiceContract_Form.Designer.cs">
+      <DependentUpon>ServiceContract_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Item\Master Forms\GenerateServiceItemFromSerial_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Item\Master Forms\GenerateServiceItemFromSerial_Form.Designer.cs">
+      <DependentUpon>GenerateServiceItemFromSerial_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Item\Master Forms\ResetServiceItemDebtorOwnership_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Item\Master Forms\ResetServiceItemDebtorOwnership_Form.Designer.cs">
+      <DependentUpon>ResetServiceItemDebtorOwnership_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Item\Master Forms\ServiceItemInquiry_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Item\Master Forms\ServiceItemInquiry_Form.Designer.cs">
+      <DependentUpon>ServiceItemInquiry_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Item\Master Forms\ServiceItemLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Item\Master Forms\ServiceItemLst_Form.Designer.cs">
+      <DependentUpon>ServiceItemLst_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Item\Master Forms\ServiceItemTagSearch_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Item\Master Forms\ServiceItemTagSearch_Form.Designer.cs">
+      <DependentUpon>ServiceItemTagSearch_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Item\Master Forms\ServiceItem_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Item\Master Forms\ServiceItem_Form.Designer.cs">
+      <DependentUpon>ServiceItem_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Note\Operation Forms\OutstandingServiceNoteAssignment_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Note\Operation Forms\OutstandingServiceNoteAssignment_Form.Designer.cs">
+      <DependentUpon>OutstandingServiceNoteAssignment_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Note\Operation Forms\ServiceNoteAssignment_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Note\Operation Forms\ServiceNoteAssignment_Form.Designer.cs">
+      <DependentUpon>ServiceNoteAssignment_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Note\Operation Forms\ServiceNoteClosing_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Note\Operation Forms\ServiceNoteClosing_Form.Designer.cs">
+      <DependentUpon>ServiceNoteClosing_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Note\Operation Forms\ServiceNoteInquiry_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Note\Operation Forms\ServiceNoteInquiry_Form.Designer.cs">
+      <DependentUpon>ServiceNoteInquiry_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Note\Operation Forms\ServiceNoteLst_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Note\Operation Forms\ServiceNoteLst_Form.Designer.cs">
+      <DependentUpon>ServiceNoteLst_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Note\Operation Forms\ServiceNoteQuickEntry_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Note\Operation Forms\ServiceNoteQuickEntry_Form.Designer.cs">
+      <DependentUpon>ServiceNoteQuickEntry_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service Note\Operation Forms\ServiceNote_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Service Note\Operation Forms\ServiceNote_Form.Designer.cs">
+      <DependentUpon>ServiceNote_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ServiceItemGradeListingReport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\ServiceItemGradeListingReport_Form.Designer.cs">
+      <DependentUpon>ServiceItemGradeListingReport_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ServiceContractTypeListingReport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\ServiceContractTypeListingReport_Form.Designer.cs">
+      <DependentUpon>ServiceContractTypeListingReport_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ServiceTypeListingReport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\ServiceTypeListingReport_Form.Designer.cs">
+      <DependentUpon>ServiceTypeListingReport_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ServiceStatusListingReport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\ServiceStatusListingReport_Form.Designer.cs">
+      <DependentUpon>ServiceStatusListingReport_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ServiceSeverityListingReport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\ServiceSeverityListingReport_Form.Designer.cs">
+      <DependentUpon>ServiceSeverityListingReport_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ServiceSolutionListingReport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\ServiceSolutionListingReport_Form.Designer.cs">
+      <DependentUpon>ServiceSolutionListingReport_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ServiceProblemListingReport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\ServiceProblemListingReport_Form.Designer.cs">
+      <DependentUpon>ServiceProblemListingReport_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\AppointmentTypeListingReport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\AppointmentTypeListingReport_Form.Designer.cs">
+      <DependentUpon>AppointmentTypeListingReport_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\AppointmentPriorityListingReport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\AppointmentPriorityListingReport_Form.Designer.cs">
+      <DependentUpon>AppointmentPriorityListingReport_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ServiceAdvisorListingReport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\ServiceAdvisorListingReport_Form.Designer.cs">
+      <DependentUpon>ServiceAdvisorListingReport_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ServicePersonListingReport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\ServicePersonListingReport_Form.Designer.cs">
+      <DependentUpon>ServicePersonListingReport_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\MechanicListingReport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\MechanicListingReport_Form.Designer.cs">
+      <DependentUpon>MechanicListingReport_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ServiceNoteListingReport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\ServiceNoteListingReport_Form.Designer.cs">
+      <DependentUpon>ServiceNoteListingReport_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ServiceContractListingReport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\ServiceContractListingReport_Form.Designer.cs">
+      <DependentUpon>ServiceContractListingReport_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ServiceItemListingReport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\ServiceItemListingReport_Form.Designer.cs">
+      <DependentUpon>ServiceItemListingReport_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\TopServiceStockCodeReport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\TopServiceStockCodeReport_Form.Designer.cs">
+      <DependentUpon>TopServiceStockCodeReport_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\TopServiceStockCodeByDeptReport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\TopServiceStockCodeByDeptReport_Form.Designer.cs">
+      <DependentUpon>TopServiceStockCodeByDeptReport_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\MeterTypeListingReport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\MeterTypeListingReport_Form.Designer.cs">
+      <DependentUpon>MeterTypeListingReport_Form.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="SQL\01_CreateTable_z_SysConfig.sql" />
+    <EmbeddedResource Include="SQL\01_CreateTable_z_SysRef.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_Appointment.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_LK_AppointmentPriority.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_LK_AppointmentType.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_LK_ServiceContractType.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_LK_ServiceItemGrade.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_LK_ServiceProblem.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_LK_ServiceSeverity.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_LK_ServiceSolution.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_LK_ServiceStatus.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_LK_ServiceType.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_Mechanic.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_MeterMultiPrice.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_MeterMultiPriceItem.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_MeterTrans.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_MeterType.sql" />
+    <EmbeddedResource Include="SQL\02_UpdateTable_zSCP_MeterType_v1.3.0.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_ServiceAdvisor.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_ServiceContract.sql" />
+    <EmbeddedResource Include="SQL\02_UpdateTable_zSCP_ServiceContract_v1.3.0.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_ServiceContractDTL.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_ServiceContractID.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_ServiceContractSVI.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_ServiceItem.sql" />
+    <EmbeddedResource Include="SQL\02_UpdateTable_zSCP_ServiceItem_v1.2.0.sql" />
+    <EmbeddedResource Include="SQL\02_UpdateTable_zSCP_ServiceItem_v1.3.0.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_ServiceItemDebtorHistory.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_ServiceItemMeterType.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_ServiceNote.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_ServiceNoteDTL.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_ServiceNoteID.sql" />
+    <EmbeddedResource Include="SQL\02_CreateTable_zSCP_ServicePerson.sql" />
+    <EmbeddedResource Include="SQL\03_CreateView_zvSCP_Views.sql" />
+    <EmbeddedResource Include="SQL\04_Seed_zSCP_LK_Defaults.sql" />
+    <EmbeddedResource Include="SQL\04_Seed_zSCP_LK_ServiceItemGrade.sql" />
+    <EmbeddedResource Include="General Setup\Master Forms\AppointmentPriorityLst_Form.resx">
+      <DependentUpon>AppointmentPriorityLst_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\AppointmentPriority_Form.resx">
+      <DependentUpon>AppointmentPriority_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\AppointmentTypeLst_Form.resx">
+      <DependentUpon>AppointmentTypeLst_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\AppointmentType_Form.resx">
+      <DependentUpon>AppointmentType_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\MechanicLst_Form.resx">
+      <DependentUpon>MechanicLst_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\Mechanic_Form.resx">
+      <DependentUpon>Mechanic_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\MeterMultiPricingLst_Form.resx">
+      <DependentUpon>MeterMultiPricingLst_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\MeterMultiPricing_Form.resx">
+      <DependentUpon>MeterMultiPricing_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\MeterTypeLst_Form.resx">
+      <DependentUpon>MeterTypeLst_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\MeterType_Form.resx">
+      <DependentUpon>MeterType_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServiceAdvisorLst_Form.resx">
+      <DependentUpon>ServiceAdvisorLst_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServiceAdvisor_Form.resx">
+      <DependentUpon>ServiceAdvisor_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServiceContractTypeLst_Form.resx">
+      <DependentUpon>ServiceContractTypeLst_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServiceContractType_Form.resx">
+      <DependentUpon>ServiceContractType_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServiceItemGradeLst_Form.resx">
+      <DependentUpon>ServiceItemGradeLst_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServiceItemGrade_Form.resx">
+      <DependentUpon>ServiceItemGrade_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServiceOption_Form.resx">
+      <DependentUpon>ServiceOption_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServicePersonLst_Form.resx">
+      <DependentUpon>ServicePersonLst_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServicePerson_Form.resx">
+      <DependentUpon>ServicePerson_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServiceProblemLst_Form.resx">
+      <DependentUpon>ServiceProblemLst_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServiceProblem_Form.resx">
+      <DependentUpon>ServiceProblem_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServiceSeverityLst_Form.resx">
+      <DependentUpon>ServiceSeverityLst_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServiceSeverity_Form.resx">
+      <DependentUpon>ServiceSeverity_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServiceSolutionLst_Form.resx">
+      <DependentUpon>ServiceSolutionLst_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServiceSolution_Form.resx">
+      <DependentUpon>ServiceSolution_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServiceStatusLst_Form.resx">
+      <DependentUpon>ServiceStatusLst_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServiceStatus_Form.resx">
+      <DependentUpon>ServiceStatus_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServiceTypeLst_Form.resx">
+      <DependentUpon>ServiceTypeLst_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General Setup\Master Forms\ServiceType_Form.resx">
+      <DependentUpon>ServiceType_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Quick View\ServiceQuickView_Form.resx">
+      <DependentUpon>ServiceQuickView_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Appointment\Operation Forms\AppointmentCalendar_Form.resx">
+      <DependentUpon>AppointmentCalendar_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Appointment\Operation Forms\AppointmentInquiry_Form.resx">
+      <DependentUpon>AppointmentInquiry_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Appointment\Operation Forms\AppointmentLst_Form.resx">
+      <DependentUpon>AppointmentLst_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Appointment\Operation Forms\Appointment_Form.resx">
+      <DependentUpon>Appointment_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Appointment\Operation Forms\MeterTypeTransactionEntry_Form.resx">
+      <DependentUpon>MeterTypeTransactionEntry_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Appointment\Operation Forms\MeterTypeTransactionList_Form.resx">
+      <DependentUpon>MeterTypeTransactionList_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Appointment\Operation Forms\PreventiveMaintenance_Form.resx">
+      <DependentUpon>PreventiveMaintenance_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Contract\Operation Forms\OutstandingServiceContractItem_Form.resx">
+      <DependentUpon>OutstandingServiceContractItem_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Contract\Operation Forms\ServiceContractInquiry_Form.resx">
+      <DependentUpon>ServiceContractInquiry_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Contract\Operation Forms\ServiceContractLst_Form.resx">
+      <DependentUpon>ServiceContractLst_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Contract\Operation Forms\ServiceContract_Form.resx">
+      <DependentUpon>ServiceContract_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Item\Master Forms\GenerateServiceItemFromSerial_Form.resx">
+      <DependentUpon>GenerateServiceItemFromSerial_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Item\Master Forms\ResetServiceItemDebtorOwnership_Form.resx">
+      <DependentUpon>ResetServiceItemDebtorOwnership_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Item\Master Forms\ServiceItemInquiry_Form.resx">
+      <DependentUpon>ServiceItemInquiry_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Item\Master Forms\ServiceItemLst_Form.resx">
+      <DependentUpon>ServiceItemLst_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Item\Master Forms\ServiceItemTagSearch_Form.resx">
+      <DependentUpon>ServiceItemTagSearch_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Item\Master Forms\ServiceItem_Form.resx">
+      <DependentUpon>ServiceItem_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Note\Operation Forms\OutstandingServiceNoteAssignment_Form.resx">
+      <DependentUpon>OutstandingServiceNoteAssignment_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Note\Operation Forms\ServiceNoteAssignment_Form.resx">
+      <DependentUpon>ServiceNoteAssignment_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Note\Operation Forms\ServiceNoteClosing_Form.resx">
+      <DependentUpon>ServiceNoteClosing_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Note\Operation Forms\ServiceNoteInquiry_Form.resx">
+      <DependentUpon>ServiceNoteInquiry_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Note\Operation Forms\ServiceNoteLst_Form.resx">
+      <DependentUpon>ServiceNoteLst_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Note\Operation Forms\ServiceNoteQuickEntry_Form.resx">
+      <DependentUpon>ServiceNoteQuickEntry_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service Note\Operation Forms\ServiceNote_Form.resx">
+      <DependentUpon>ServiceNote_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ServiceItemGradeListingReport_Form.resx">
+      <DependentUpon>ServiceItemGradeListingReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ServiceContractTypeListingReport_Form.resx">
+      <DependentUpon>ServiceContractTypeListingReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ServiceTypeListingReport_Form.resx">
+      <DependentUpon>ServiceTypeListingReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ServiceStatusListingReport_Form.resx">
+      <DependentUpon>ServiceStatusListingReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ServiceSeverityListingReport_Form.resx">
+      <DependentUpon>ServiceSeverityListingReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ServiceSolutionListingReport_Form.resx">
+      <DependentUpon>ServiceSolutionListingReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ServiceProblemListingReport_Form.resx">
+      <DependentUpon>ServiceProblemListingReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\AppointmentTypeListingReport_Form.resx">
+      <DependentUpon>AppointmentTypeListingReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\AppointmentPriorityListingReport_Form.resx">
+      <DependentUpon>AppointmentPriorityListingReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ServiceAdvisorListingReport_Form.resx">
+      <DependentUpon>ServiceAdvisorListingReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ServicePersonListingReport_Form.resx">
+      <DependentUpon>ServicePersonListingReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\MechanicListingReport_Form.resx">
+      <DependentUpon>MechanicListingReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ServiceNoteListingReport_Form.resx">
+      <DependentUpon>ServiceNoteListingReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ServiceContractListingReport_Form.resx">
+      <DependentUpon>ServiceContractListingReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ServiceItemListingReport_Form.resx">
+      <DependentUpon>ServiceItemListingReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\TopServiceStockCodeReport_Form.resx">
+      <DependentUpon>TopServiceStockCodeReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\TopServiceStockCodeByDeptReport_Form.resx">
+      <DependentUpon>TopServiceStockCodeByDeptReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\MeterTypeListingReport_Form.resx">
+      <DependentUpon>MeterTypeListingReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AutoCount-Plugin-Base\VTACPluginBase.csproj">
+      <Project>{4B29BA5B-1103-4801-8BB6-18BA86F1D9D8}</Project>
+      <Name>VTACPluginBase</Name>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

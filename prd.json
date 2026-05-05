@@ -1,0 +1,460 @@
+{
+  "project": "ServiceContractPhotocopier",
+  "version": "0.1.0",
+  "updated": "2026-04-12",
+  "tablePrefix": "zSCP_",
+  "deferredModules": ["Reports", "Charts"],
+  "epics": [
+    {
+      "id": "EPIC-CONTRACT",
+      "title": "Service Contract Management",
+      "submodule": "Service Contract",
+      "description": "Rental/service contracts for photocopier machines — create, track, renew, cancel. A contract links a debtor to one or more service items plus spare parts with a validity period.",
+      "screenshots": ["UI/01-service-contract/"],
+      "tables": ["zSCP_ServiceContract", "zSCP_ServiceContractDTL", "zSCP_ServiceContractSVI", "zSCP_ServiceContractID", "zSCP_LK_ServiceContractType"],
+      "forms": ["ServiceContractLst_Form", "ServiceContract_Form", "ServiceContractInquiry_Form", "OutstandingServiceContractItem_Form"],
+      "stories": [
+        {
+          "id": "US-CONTRACT-001",
+          "title": "Browse all service contracts",
+          "as_a": "Service Manager",
+          "i_want": "to see all active service contracts with debtor and expiry info",
+          "so_that": "I can identify contracts expiring soon and take renewal action",
+          "forms": ["ServiceContractLst_Form"],
+          "screenshots": ["UI/01-service-contract/01-edit-main.png"],
+          "tables_read": ["zvSCP_ServiceContractList"],
+          "acceptance_criteria": [
+            "Grid shows ContractCode, Type, DebtorCode, DebtorName, StartDate, ExpiryDate, Value, Currency, Status",
+            "Filter by Type / Inactive / Done via toolbar",
+            "Double-click row opens ServiceContract_Form in edit mode",
+            "Toolbar: New, Edit, Delete, Refresh, Close — gated by access rights"
+          ],
+          "status": "scaffolded",
+          "slice": 1
+        },
+        {
+          "id": "US-CONTRACT-002",
+          "title": "Create a new service contract",
+          "as_a": "Service Staff",
+          "i_want": "to create a new rental or service contract with the debtor's machine list and spare parts allotment",
+          "so_that": "billing and meter readings can be tracked against the contract",
+          "forms": ["ServiceContract_Form"],
+          "screenshots": ["UI/01-service-contract/01-edit-main.png", "UI/01-service-contract/02-edit-items-tab.png"],
+          "tables_write": ["zSCP_ServiceContract", "zSCP_ServiceContractSVI", "zSCP_ServiceContractDTL"],
+          "acceptance_criteria": [
+            "Header fields: ContractCode, Type, StartDate, ExpiryDate, Debtor (with address auto-fill), Term, Currency, Staff, Area, Branch, Remark1..4",
+            "Service Items tab: grid of linked ServiceItem codes (add/remove rows)",
+            "Spare Parts tab: grid of ItemStockCode + Qty + UnitPrice + Amount with tax calculations",
+            "Save writes header + details atomically; validation: code unique, debtor must exist in core Debtor"
+          ],
+          "status": "planned",
+          "slice": 2
+        },
+        {
+          "id": "US-CONTRACT-003",
+          "title": "Inquiry: contracts by debtor/type/date range",
+          "as_a": "Service Manager",
+          "i_want": "to filter contracts by debtor, type, date range, and status",
+          "so_that": "I can answer customer queries and produce ad-hoc reports",
+          "forms": ["ServiceContractInquiry_Form"],
+          "tables_read": ["zvSCP_ServiceContractList"],
+          "acceptance_criteria": ["Filter panel: Debtor, Type, StartDate range, Status", "Grid shows filtered rows", "Export to Excel"],
+          "status": "scaffolded",
+          "slice": 2
+        },
+        {
+          "id": "US-CONTRACT-004",
+          "title": "Outstanding contract items — machines still under contract",
+          "as_a": "Service Manager",
+          "i_want": "to see every machine covered by an active (non-done non-inactive) contract",
+          "so_that": "I know our support footprint",
+          "forms": ["OutstandingServiceContractItem_Form"],
+          "tables_read": ["zvSCP_OutstandingServiceContractItem"],
+          "acceptance_criteria": ["Grid joins ServiceContract × ServiceContractSVI × ServiceItem × Debtor", "Only active rows shown"],
+          "status": "scaffolded",
+          "slice": 1
+        }
+      ]
+    },
+    {
+      "id": "EPIC-ITEM",
+      "title": "Service Item Management",
+      "submodule": "Service Item",
+      "description": "Each photocopier machine under contract is a ServiceItem. Tracks the machine lifecycle: debtor ownership, meter types installed, preventive maintenance schedule.",
+      "screenshots": ["UI/02-service-item/"],
+      "tables": ["zSCP_ServiceItem", "zSCP_ServiceItemMeterType", "zSCP_ServiceItemDebtorHistory", "zSCP_LK_ServiceItemGrade"],
+      "forms": ["ServiceItemLst_Form", "ServiceItem_Form", "ServiceItemInquiry_Form", "ServiceItemTagSearch_Form", "GenerateServiceItemFromSerial_Form", "ResetServiceItemDebtorOwnership_Form"],
+      "stories": [
+        {
+          "id": "US-ITEM-001",
+          "title": "Browse all service items",
+          "as_a": "Service Staff",
+          "i_want": "to see every machine with its current debtor, serial, and contract link",
+          "so_that": "I can look up any machine before dispatching",
+          "forms": ["ServiceItemLst_Form"],
+          "screenshots": ["UI/02-service-item/15-inquiry-detail-report.png"],
+          "tables_read": ["zvSCP_ServiceItemList"],
+          "acceptance_criteria": ["Grid shows ItemCode, StockCode, Description, Grade, DebtorCode, DebtorName, ContractNo, ExpiryDate, PMActive"],
+          "status": "scaffolded",
+          "slice": 1
+        },
+        {
+          "id": "US-ITEM-002",
+          "title": "Create/edit a service item",
+          "as_a": "Service Staff",
+          "i_want": "to register a new machine with its debtor ownership, meter types, and PM schedule",
+          "so_that": "subsequent service notes and meter reads can be tracked",
+          "forms": ["ServiceItem_Form"],
+          "tables_write": ["zSCP_ServiceItem", "zSCP_ServiceItemMeterType"],
+          "acceptance_criteria": [
+            "Header: Code, StockCode, Grade, PurchaseDate, UnitPrice, Debtor, Area, Branch, PM fields (IntervalType, Value, StartDate, Active)",
+            "Meter Types tab: grid of MeterType + MinimumCharges + ChargesRate + MultiPrice",
+            "Save validates ItemCode uniqueness + Grade FK"
+          ],
+          "status": "planned",
+          "slice": 2
+        },
+        {
+          "id": "US-ITEM-003",
+          "title": "Reset machine debtor ownership (bulk transfer)",
+          "as_a": "Service Manager",
+          "i_want": "to bulk-update the debtor ownership of multiple service items",
+          "so_that": "when a customer merges or sells machines, the records stay accurate",
+          "forms": ["ResetServiceItemDebtorOwnership_Form"],
+          "tables_write": ["zSCP_ServiceItem", "zSCP_ServiceItemDebtorHistory"],
+          "acceptance_criteria": ["Select source debtor → select target debtor → select items to transfer → confirm → writes history row"],
+          "status": "scaffolded",
+          "slice": 2
+        },
+        {
+          "id": "US-ITEM-004",
+          "title": "Generate service items from sales invoice serial numbers",
+          "as_a": "Service Staff",
+          "i_want": "to auto-create ServiceItem records from SI serial numbers when a machine is sold",
+          "so_that": "I don't have to type each machine manually after a delivery",
+          "forms": ["GenerateServiceItemFromSerial_Form"],
+          "acceptance_criteria": ["Pick debtor → pick sales invoice → select serials → generate ServiceItem rows"],
+          "status": "scaffolded",
+          "slice": 3
+        },
+        {
+          "id": "US-ITEM-005",
+          "title": "Search machines by tag / remark",
+          "as_a": "Service Staff",
+          "i_want": "to find machines by a custom remark or tag field",
+          "so_that": "I can answer obscure lookup queries fast",
+          "forms": ["ServiceItemTagSearch_Form"],
+          "acceptance_criteria": ["Free-text search across Remark1..4 fields"],
+          "status": "scaffolded",
+          "slice": 3
+        }
+      ]
+    },
+    {
+      "id": "EPIC-NOTE",
+      "title": "Service Note Workflow",
+      "submodule": "Service Note",
+      "description": "ServiceNote is a service job ticket — problem logged, assigned to a person, tracked to closure, and eventually invoiced.",
+      "screenshots": ["UI/03-service-note/"],
+      "tables": ["zSCP_ServiceNote", "zSCP_ServiceNoteDTL", "zSCP_ServiceNoteID", "zSCP_LK_ServiceStatus", "zSCP_LK_ServiceSeverity", "zSCP_LK_ServiceSolution", "zSCP_LK_ServiceProblem", "zSCP_LK_ServiceType"],
+      "forms": ["ServiceNoteLst_Form", "ServiceNote_Form", "ServiceNoteQuickEntry_Form", "ServiceNoteClosing_Form", "ServiceNoteAssignment_Form", "ServiceNoteInquiry_Form", "OutstandingServiceNoteAssignment_Form"],
+      "stories": [
+        {
+          "id": "US-NOTE-001",
+          "title": "Log a new service note (full entry)",
+          "as_a": "Service Staff",
+          "i_want": "to log an incoming customer problem with machine, problem code, severity, and assigned person",
+          "so_that": "it enters the service workflow for attention",
+          "forms": ["ServiceNote_Form"],
+          "tables_write": ["zSCP_ServiceNote", "zSCP_ServiceNoteDTL"],
+          "acceptance_criteria": ["Pick ServiceItem → debtor auto-populates", "Pick ProblemCode, SeverityCode, ServiceType", "Assign to ServicePerson", "Status defaults to OPEN"],
+          "status": "planned",
+          "slice": 2
+        },
+        {
+          "id": "US-NOTE-002",
+          "title": "Quick entry for walk-in service notes",
+          "as_a": "Service Staff",
+          "i_want": "a streamlined one-page form to log minimal-info service notes",
+          "so_that": "front-desk intake is fast",
+          "forms": ["ServiceNoteQuickEntry_Form"],
+          "acceptance_criteria": ["Minimal fields: Debtor, Machine, Problem, Severity", "Save + New workflow"],
+          "status": "scaffolded",
+          "slice": 2
+        },
+        {
+          "id": "US-NOTE-003",
+          "title": "Assign outstanding service notes to a service person",
+          "as_a": "Service Manager",
+          "i_want": "a dialog listing all unassigned / open service notes with bulk-assign to a person",
+          "so_that": "I can distribute the day's work",
+          "forms": ["ServiceNoteAssignment_Form"],
+          "tables_write": ["zSCP_ServiceNote"],
+          "acceptance_criteria": ["Pick ServicePerson → see list of open notes → select multiple → assign"],
+          "status": "scaffolded",
+          "slice": 2
+        },
+        {
+          "id": "US-NOTE-004",
+          "title": "Close a completed service note",
+          "as_a": "Service Staff",
+          "i_want": "to mark a service note as closed with solution, actual service date, and remarks",
+          "so_that": "the note exits the open queue and is ready for invoicing",
+          "forms": ["ServiceNoteClosing_Form"],
+          "tables_write": ["zSCP_ServiceNote"],
+          "acceptance_criteria": ["Pick SolutionCode, set ClosedDate, set ActualServiceDate", "Closed='Y' after save"],
+          "status": "scaffolded",
+          "slice": 2
+        },
+        {
+          "id": "US-NOTE-005",
+          "title": "Inquiry on service notes",
+          "as_a": "Service Manager",
+          "i_want": "to filter notes by status, date range, severity, service person",
+          "so_that": "I can measure SLA performance and backlog",
+          "forms": ["ServiceNoteInquiry_Form"],
+          "tables_read": ["zvSCP_ServiceNoteList"],
+          "acceptance_criteria": ["Filter panel with date range + status + severity + person", "Export to Excel"],
+          "status": "scaffolded",
+          "slice": 2
+        },
+        {
+          "id": "US-NOTE-006",
+          "title": "Outstanding service note assignment report",
+          "as_a": "Service Manager",
+          "i_want": "a view of notes still not closed, grouped by assigned person",
+          "so_that": "I can follow up on backlog",
+          "forms": ["OutstandingServiceNoteAssignment_Form"],
+          "tables_read": ["zvSCP_OutstandingServiceNoteAssignment"],
+          "acceptance_criteria": ["Group by AssignToServicePersonCode", "Show overdue counts"],
+          "status": "scaffolded",
+          "slice": 1
+        }
+      ]
+    },
+    {
+      "id": "EPIC-APPOINTMENT",
+      "title": "Service Appointments & Preventive Maintenance",
+      "submodule": "Service Appointment",
+      "description": "Calendar view of appointments — service visits, PM, collections. Integrates with service notes and sales lead module.",
+      "screenshots": ["UI/05-service-appointment/"],
+      "tables": ["zSCP_Appointment", "zSCP_LK_AppointmentType", "zSCP_LK_AppointmentPriority"],
+      "forms": ["AppointmentCalendar_Form", "AppointmentLst_Form", "Appointment_Form", "AppointmentInquiry_Form", "PreventiveMaintenance_Form", "MeterTypeTransactionEntry_Form"],
+      "stories": [
+        {
+          "id": "US-APPT-001",
+          "title": "View appointment calendar",
+          "as_a": "Service Manager",
+          "i_want": "a calendar showing all scheduled appointments",
+          "so_that": "I can see workload and schedule new visits",
+          "forms": ["AppointmentCalendar_Form"],
+          "screenshots": ["UI/05-service-appointment/01-calendar-view.png"],
+          "tables_read": ["zvSCP_AppointmentCalendar"],
+          "acceptance_criteria": ["DevExpress SchedulerControl", "Filter by ServicePerson", "Color by priority"],
+          "status": "scaffolded",
+          "slice": 2
+        },
+        {
+          "id": "US-APPT-002",
+          "title": "Create/edit an appointment",
+          "as_a": "Service Staff",
+          "i_want": "to create an appointment linked to a debtor / service note",
+          "so_that": "the calendar reflects the planned visit",
+          "forms": ["Appointment_Form"],
+          "tables_write": ["zSCP_Appointment"],
+          "acceptance_criteria": ["Start/Finish pickers", "Type/Priority lookups", "Link to ServiceNote or SalesLead"],
+          "status": "planned",
+          "slice": 2
+        },
+        {
+          "id": "US-APPT-003",
+          "title": "Preventive maintenance bulk scheduler",
+          "as_a": "Service Manager",
+          "i_want": "to generate PM appointments for all machines due this week",
+          "so_that": "I don't miss scheduled maintenance",
+          "forms": ["PreventiveMaintenance_Form"],
+          "tables_read": ["zSCP_ServiceItem"],
+          "tables_write": ["zSCP_Appointment", "zSCP_ServiceNote"],
+          "acceptance_criteria": ["List machines where PMActive='Y' and PMLastServiceDate+Interval < today", "Generate appointments + service notes in bulk"],
+          "status": "scaffolded",
+          "slice": 3
+        },
+        {
+          "id": "US-APPT-004",
+          "title": "Meter type transaction entry (meter reads)",
+          "as_a": "Service Staff",
+          "i_want": "to enter meter readings against a ServiceItem+MeterType so billing can calculate charges",
+          "so_that": "meter contracts can be invoiced",
+          "forms": ["MeterTypeTransactionEntry_Form"],
+          "tables_write": ["zSCP_MeterTrans"],
+          "acceptance_criteria": ["Pick ServiceItem → show its installed meter types → enter current readings → save trans rows"],
+          "status": "scaffolded",
+          "slice": 3
+        }
+      ]
+    },
+    {
+      "id": "EPIC-SETUP",
+      "title": "Service Module Master Setup",
+      "submodule": "General Setup",
+      "description": "All the small code-description lookup tables that drive dropdowns in the transaction forms.",
+      "screenshots": ["UI/09-general-setup/"],
+      "tables": ["zSCP_LK_ServiceStatus", "zSCP_LK_ServiceSeverity", "zSCP_LK_ServiceSolution", "zSCP_LK_ServiceProblem", "zSCP_LK_ServiceType", "zSCP_LK_ServiceContractType", "zSCP_LK_ServiceItemGrade", "zSCP_LK_AppointmentType", "zSCP_LK_AppointmentPriority", "zSCP_ServicePerson", "zSCP_ServiceAdvisor", "zSCP_Mechanic", "zSCP_MeterType", "zSCP_MeterMultiPrice", "zSCP_MeterMultiPriceItem"],
+      "forms": ["ServiceStatusLst_Form", "ServiceSeverityLst_Form", "ServiceSolutionLst_Form", "ServiceProblemLst_Form", "ServiceTypeLst_Form", "ServiceContractTypeLst_Form", "ServiceItemGradeLst_Form", "AppointmentTypeLst_Form", "AppointmentPriorityLst_Form", "ServicePersonLst_Form", "ServiceAdvisorLst_Form", "MechanicLst_Form", "MeterTypeLst_Form", "MeterMultiPricingLst_Form", "ServiceOption_Form"],
+      "stories": [
+        {
+          "id": "US-SETUP-001",
+          "title": "Maintain service status lookup",
+          "as_a": "Service Manager",
+          "i_want": "to add/edit/disable service status values",
+          "so_that": "status dropdowns reflect our workflow",
+          "forms": ["ServiceStatusLst_Form", "ServiceStatus_Form"],
+          "tables_write": ["zSCP_LK_ServiceStatus"],
+          "acceptance_criteria": ["Grid with Code, Description, Inactive", "Edit dialog for single row", "Default seed: OPEN, IN-PROGRESS, PENDING, CLOSED, CANCELLED"],
+          "status": "scaffolded",
+          "slice": 1
+        },
+        {
+          "id": "US-SETUP-002",
+          "title": "Maintain service severity / solution / problem / type / contract-type / item-grade / appointment-type / appointment-priority lookups",
+          "as_a": "Service Manager",
+          "i_want": "the 8 other small lookups to share the same list+edit pattern",
+          "so_that": "maintenance is uniform and cheap",
+          "forms": ["ServiceSeverityLst_Form", "ServiceSolutionLst_Form", "ServiceProblemLst_Form", "ServiceTypeLst_Form", "ServiceContractTypeLst_Form", "ServiceItemGradeLst_Form", "AppointmentTypeLst_Form", "AppointmentPriorityLst_Form"],
+          "acceptance_criteria": ["All 8 forms inherit from ScpLookupLst_Form + ScpLookupEdt_Form base classes", "No duplicated hand-written UI per the form standardization rule"],
+          "status": "scaffolded",
+          "slice": 1
+        },
+        {
+          "id": "US-SETUP-003",
+          "title": "Maintain service people (ServicePerson / ServiceAdvisor / Mechanic)",
+          "as_a": "Service Manager",
+          "i_want": "to maintain the three categories of service staff",
+          "so_that": "each transaction can reference the right person",
+          "forms": ["ServicePersonLst_Form", "ServiceAdvisorLst_Form", "MechanicLst_Form"],
+          "tables_write": ["zSCP_ServicePerson", "zSCP_ServiceAdvisor", "zSCP_Mechanic"],
+          "acceptance_criteria": ["Fields: Code, Name, Gender, Phone, Email, IC, Occupation, DateJoined, Inactive", "All three share ScpPersonEdt_Form base"],
+          "status": "scaffolded",
+          "slice": 1
+        },
+        {
+          "id": "US-SETUP-004",
+          "title": "Maintain meter types and multi-pricing",
+          "as_a": "Service Manager",
+          "i_want": "to define meter types (B&W, Color, etc.) and their tiered pricing schemes",
+          "so_that": "meter billing charges are computed automatically",
+          "forms": ["MeterTypeLst_Form", "MeterMultiPricingLst_Form"],
+          "tables_write": ["zSCP_MeterType", "zSCP_MeterMultiPrice", "zSCP_MeterMultiPriceItem"],
+          "acceptance_criteria": ["MeterType has StockCode, MinCharges, ChargesRate", "MultiPricing has tiered price breakpoints"],
+          "status": "planned",
+          "slice": 2
+        },
+        {
+          "id": "US-SETUP-005",
+          "title": "Global service option configuration",
+          "as_a": "Service Manager",
+          "i_want": "a tabbed config dialog for module-wide settings",
+          "so_that": "I can toggle feature flags without code changes",
+          "forms": ["ServiceOption_Form"],
+          "acceptance_criteria": ["Tabs for Main, Service Note Central, etc.", "Persists to z_SysConfig"],
+          "status": "scaffolded",
+          "slice": 3
+        }
+      ]
+    },
+    {
+      "id": "EPIC-INQUIRY",
+      "title": "Cross-module Inquiries & Quick View",
+      "submodule": "Inquiry",
+      "description": "Dashboard + aggregate views that span multiple tables for management visibility.",
+      "screenshots": ["UI/06-inquiry/", "UI/08-service-quick-view/"],
+      "tables": ["zvSCP_ServiceContractList", "zvSCP_ServiceNoteList", "zvSCP_ServiceItemList", "zvSCP_AppointmentCalendar", "zvSCP_OutstandingServiceContractItem", "zvSCP_OutstandingServiceNoteAssignment"],
+      "forms": ["ServiceQuickView_Form", "ServiceContractInquiry_Form", "ServiceItemInquiry_Form", "ServiceNoteInquiry_Form", "AppointmentInquiry_Form", "OutstandingServiceContractItem_Form", "OutstandingServiceNoteAssignment_Form"],
+      "stories": [
+        {
+          "id": "US-INQ-001",
+          "title": "Service quick view dashboard",
+          "as_a": "Service Manager",
+          "i_want": "a single-screen dashboard of today's / tomorrow's appointments, open service notes, and stats",
+          "so_that": "I start the day with situational awareness",
+          "forms": ["ServiceQuickView_Form"],
+          "screenshots": ["UI/08-service-quick-view/01-dashboard.png"],
+          "acceptance_criteria": ["Cards: Today Appts, Tomorrow Appts, Open Notes, Overdue PM", "Clickable to drill into each"],
+          "status": "scaffolded",
+          "slice": 3
+        }
+      ]
+    }
+  ],
+  "form_manifest": [
+    { "name": "ServiceStatusLst_Form",         "archetype": "SimpleLookupList",     "table": "zSCP_LK_ServiceStatus",         "parentMenu": "General Setup", "menuOrder": 10 },
+    { "name": "ServiceStatus_Form",            "archetype": "SimpleLookupEditor",   "table": "zSCP_LK_ServiceStatus" },
+    { "name": "ServiceSeverityLst_Form",       "archetype": "SimpleLookupList",     "table": "zSCP_LK_ServiceSeverity",       "parentMenu": "General Setup", "menuOrder": 20 },
+    { "name": "ServiceSeverity_Form",          "archetype": "SimpleLookupEditor",   "table": "zSCP_LK_ServiceSeverity" },
+    { "name": "ServiceSolutionLst_Form",       "archetype": "SimpleLookupList",     "table": "zSCP_LK_ServiceSolution",       "parentMenu": "General Setup", "menuOrder": 30 },
+    { "name": "ServiceSolution_Form",          "archetype": "SimpleLookupEditor",   "table": "zSCP_LK_ServiceSolution" },
+    { "name": "ServiceProblemLst_Form",        "archetype": "SimpleLookupList",     "table": "zSCP_LK_ServiceProblem",        "parentMenu": "General Setup", "menuOrder": 40 },
+    { "name": "ServiceProblem_Form",           "archetype": "SimpleLookupEditor",   "table": "zSCP_LK_ServiceProblem" },
+    { "name": "ServiceTypeLst_Form",           "archetype": "SimpleLookupList",     "table": "zSCP_LK_ServiceType",           "parentMenu": "General Setup", "menuOrder": 50 },
+    { "name": "ServiceType_Form",              "archetype": "SimpleLookupEditor",   "table": "zSCP_LK_ServiceType" },
+    { "name": "ServiceContractTypeLst_Form",   "archetype": "SimpleLookupList",     "table": "zSCP_LK_ServiceContractType",   "parentMenu": "General Setup", "menuOrder": 60 },
+    { "name": "ServiceContractType_Form",      "archetype": "SimpleLookupEditor",   "table": "zSCP_LK_ServiceContractType" },
+    { "name": "ServiceItemGradeLst_Form",      "archetype": "SimpleLookupList",     "table": "zSCP_LK_ServiceItemGrade",      "parentMenu": "General Setup", "menuOrder": 70 },
+    { "name": "ServiceItemGrade_Form",         "archetype": "SimpleLookupEditor",   "table": "zSCP_LK_ServiceItemGrade" },
+    { "name": "AppointmentTypeLst_Form",       "archetype": "SimpleLookupList",     "table": "zSCP_LK_AppointmentType",       "parentMenu": "General Setup", "menuOrder": 80 },
+    { "name": "AppointmentType_Form",          "archetype": "SimpleLookupEditor",   "table": "zSCP_LK_AppointmentType" },
+    { "name": "AppointmentPriorityLst_Form",   "archetype": "SimpleLookupList",     "table": "zSCP_LK_AppointmentPriority",   "parentMenu": "General Setup", "menuOrder": 90 },
+    { "name": "AppointmentPriority_Form",      "archetype": "SimpleLookupEditor",   "table": "zSCP_LK_AppointmentPriority" },
+    { "name": "ServicePersonLst_Form",         "archetype": "SimpleLookupList",     "table": "zSCP_ServicePerson",            "parentMenu": "General Setup", "menuOrder": 100 },
+    { "name": "ServicePerson_Form",            "archetype": "PersonEditor",         "table": "zSCP_ServicePerson" },
+    { "name": "ServiceAdvisorLst_Form",        "archetype": "SimpleLookupList",     "table": "zSCP_ServiceAdvisor",           "parentMenu": "General Setup", "menuOrder": 110 },
+    { "name": "ServiceAdvisor_Form",           "archetype": "PersonEditor",         "table": "zSCP_ServiceAdvisor" },
+    { "name": "MechanicLst_Form",              "archetype": "SimpleLookupList",     "table": "zSCP_Mechanic",                 "parentMenu": "General Setup", "menuOrder": 120 },
+    { "name": "Mechanic_Form",                 "archetype": "PersonEditor",         "table": "zSCP_Mechanic" },
+    { "name": "MeterTypeLst_Form",             "archetype": "SimpleLookupList",     "table": "zSCP_MeterType",                "parentMenu": "General Setup", "menuOrder": 130 },
+    { "name": "MeterType_Form",                "archetype": "SimpleLookupEditor",   "table": "zSCP_MeterType" },
+    { "name": "MeterMultiPricingLst_Form",     "archetype": "SimpleLookupList",     "table": "zSCP_MeterMultiPrice",          "parentMenu": "General Setup", "menuOrder": 140 },
+    { "name": "MeterMultiPricing_Form",        "archetype": "SimpleLookupEditor",   "table": "zSCP_MeterMultiPrice" },
+    { "name": "ServiceOption_Form",            "archetype": "Placeholder",          "menuCaption": "Service Option...",            "menuOrder": 900 },
+    { "name": "ServiceContractLst_Form",       "archetype": "TransactionList",      "view": "zvSCP_ServiceContractList",      "menuCaption": "Maintain Service Contract", "menuOrder": 200 },
+    { "name": "ServiceContract_Form",          "archetype": "Placeholder",         "table": "zSCP_ServiceContract" },
+    { "name": "ServiceContractInquiry_Form",   "archetype": "TransactionList",      "view": "zvSCP_ServiceContractList",      "parentMenu": "Inquiry", "menuOrder": 20 },
+    { "name": "OutstandingServiceContractItem_Form", "archetype": "TransactionList","view": "zvSCP_OutstandingServiceContractItem", "parentMenu": "Inquiry", "menuOrder": 60 },
+    { "name": "ServiceItemLst_Form",           "archetype": "TransactionList",      "view": "zvSCP_ServiceItemList",          "menuCaption": "Maintain Service Item",     "menuOrder": 210 },
+    { "name": "ServiceItem_Form",              "archetype": "Placeholder",         "table": "zSCP_ServiceItem" },
+    { "name": "ServiceItemInquiry_Form",       "archetype": "TransactionList",      "view": "zvSCP_ServiceItemList",          "parentMenu": "Inquiry", "menuOrder": 10 },
+    { "name": "ServiceItemTagSearch_Form",     "archetype": "Placeholder" },
+    { "name": "GenerateServiceItemFromSerial_Form", "archetype": "Placeholder" },
+    { "name": "ResetServiceItemDebtorOwnership_Form", "archetype": "Placeholder",  "menuCaption": "Reset Service Item Debtor Ownership", "menuOrder": 410 },
+    { "name": "ServiceNoteLst_Form",           "archetype": "TransactionList",      "view": "zvSCP_ServiceNoteList",          "menuCaption": "Service Note",                "menuOrder": 300 },
+    { "name": "ServiceNote_Form",              "archetype": "Placeholder",         "table": "zSCP_ServiceNote" },
+    { "name": "ServiceNoteQuickEntry_Form",    "archetype": "Placeholder",         "menuCaption": "Service Note - Quick Entry", "menuOrder": 110 },
+    { "name": "ServiceNoteClosing_Form",       "archetype": "Placeholder",         "menuCaption": "Service Note Closing",       "menuOrder": 320 },
+    { "name": "ServiceNoteAssignment_Form",    "archetype": "Placeholder",         "menuCaption": "Service Note Assignment",    "menuOrder": 310 },
+    { "name": "ServiceNoteInquiry_Form",       "archetype": "TransactionList",      "view": "zvSCP_ServiceNoteList",          "parentMenu": "Inquiry", "menuOrder": 30 },
+    { "name": "OutstandingServiceNoteAssignment_Form", "archetype": "TransactionList", "view": "zvSCP_OutstandingServiceNoteAssignment", "parentMenu": "Inquiry", "menuOrder": 50 },
+    { "name": "AppointmentCalendar_Form",      "archetype": "Placeholder",         "menuCaption": "Service Appointment",         "menuOrder": 330 },
+    { "name": "AppointmentLst_Form",           "archetype": "TransactionList",      "view": "zvSCP_AppointmentCalendar" },
+    { "name": "Appointment_Form",              "archetype": "Placeholder",         "table": "zSCP_Appointment" },
+    { "name": "AppointmentInquiry_Form",       "archetype": "TransactionList",      "view": "zvSCP_AppointmentCalendar",      "parentMenu": "Inquiry", "menuOrder": 40 },
+    { "name": "PreventiveMaintenance_Form",    "archetype": "Placeholder",         "menuCaption": "Preventive Maintenance - Service Note", "menuOrder": 400 },
+    { "name": "MeterTypeTransactionEntry_Form","archetype": "Placeholder",         "menuCaption": "Meter Type Transaction Entry", "menuOrder": 500 },
+    { "name": "ServiceQuickView_Form",         "archetype": "Placeholder",         "menuCaption": "Service - Quick View",        "menuOrder": 100 }
+  ],
+  "deferred": [
+    { "item": "serviceitemmetertrans historical data (145K rows)", "reason": "customer-specific ETL" },
+    { "item": "serviceitem reference data (3,067 rows)", "reason": "customer-specific" },
+    { "item": "Reports submodule entirely (menu + .repx designs)", "reason": "user pre-sleep deferral" },
+    { "item": "Charts / dashboards", "reason": "user pre-sleep deferral (Quick View still in scope as a calendar+list)" },
+    { "item": "salesleadkey FK on ServiceNote/Appointment", "reason": "no SalesLead table in AutoCount 2.x core" },
+    { "item": "countrycode FK on ServiceContract", "reason": "no Country table in AutoCount 2.x core" },
+    { "item": "jobcode FK", "reason": "no Job table; could map to Project.ProjNo later" }
+  ],
+  "risks": [
+    { "id": "R1", "description": "Form pixel-match to screenshots is Slice 2 work, not Slice 1", "status": "open" },
+    { "id": "R2", "description": "AutoCount UDT d_DocNo etc. verified present in AED_ATPLUGIN001 — no issue", "status": "closed" },
+    { "id": "R3", "description": "Appointment recurrenceinfo field is VARBINARY(MAX) — DevExpress V8→2.x binary compat unknown, new records only", "status": "open" },
+    { "id": "R4", "description": "11 unsorted UI screenshots in UI/_unsorted/ need manual categorization", "status": "open" },
+    { "id": "R5", "description": "ServiceContract_Form, ServiceItem_Form, ServiceNote_Form, Appointment_Form are placeholders — full UI deferred to Slice 2", "status": "open" }
+  ]
+}

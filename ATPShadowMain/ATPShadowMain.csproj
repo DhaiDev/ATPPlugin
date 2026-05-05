@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B2C77A41-9E4D-4F11-9A88-31D2D5A4C901}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>ATPShadowMain</RootNamespace>
+    <AssemblyName>ATPShadowMain</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <StartupObject>ATPShadowMain.Program</StartupObject>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoCount">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AutoCount.Accounting">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Accounting.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AutoCount.Accounting.UI">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Accounting.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AutoCount.MainEntry">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.MainEntry.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AutoCount.Tools">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Tools.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AutoCount.UI">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.Data.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.Utils.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraEditors.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraBars.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraNavBar.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraTab.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="FormCatalog.cs" />
+    <Compile Include="ShadowLauncher_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ShadowLauncher_Form.Designer.cs">
+      <DependentUpon>ShadowLauncher_Form.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="ShadowLauncher_Form.resx">
+      <DependentUpon>ShadowLauncher_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="ShadowLauncherV2_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ShadowLauncherV2_Form.Designer.cs">
+      <DependentUpon>ShadowLauncherV2_Form.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="ShadowLauncherV2_Form.resx">
+      <DependentUpon>ShadowLauncherV2_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ServiceContractPhotocopier\ServiceContractPhotocopier.csproj">
+      <Project>{6A996121-169E-4D35-AEED-58CFBB1386B7}</Project>
+      <Name>ServiceContractPhotocopier</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

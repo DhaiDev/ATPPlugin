@@ -1,0 +1,43 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34408.163
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATPShadowMain", "ATPShadowMain\ATPShadowMain.csproj", "{B2C77A41-9E4D-4F11-9A88-31D2D5A4C901}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceContractPhotocopier", "ServiceContractPhotocopier\ServiceContractPhotocopier.csproj", "{6A996121-169E-4D35-AEED-58CFBB1386B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VTACPluginBase", "..\AutoCount-Plugin-Base\VTACPluginBase.csproj", "{4B29BA5B-1103-4801-8BB6-18BA86F1D9D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATPCli", "ATPCli\ATPCli.csproj", "{36DBACA8-0DC5-4F1D-A1F6-EDAF86073F10}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B2C77A41-9E4D-4F11-9A88-31D2D5A4C901}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2C77A41-9E4D-4F11-9A88-31D2D5A4C901}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2C77A41-9E4D-4F11-9A88-31D2D5A4C901}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2C77A41-9E4D-4F11-9A88-31D2D5A4C901}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A996121-169E-4D35-AEED-58CFBB1386B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A996121-169E-4D35-AEED-58CFBB1386B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A996121-169E-4D35-AEED-58CFBB1386B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A996121-169E-4D35-AEED-58CFBB1386B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B29BA5B-1103-4801-8BB6-18BA86F1D9D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B29BA5B-1103-4801-8BB6-18BA86F1D9D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B29BA5B-1103-4801-8BB6-18BA86F1D9D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B29BA5B-1103-4801-8BB6-18BA86F1D9D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36DBACA8-0DC5-4F1D-A1F6-EDAF86073F10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36DBACA8-0DC5-4F1D-A1F6-EDAF86073F10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36DBACA8-0DC5-4F1D-A1F6-EDAF86073F10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36DBACA8-0DC5-4F1D-A1F6-EDAF86073F10}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A0F7C4E3-6B29-4E0A-9D76-3C12B82E5FC1}
+		StartupItem = ATPShadowMain\ATPShadowMain.csproj
+	EndGlobalSection
+EndGlobal

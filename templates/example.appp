@@ -1,0 +1,81 @@
+<?xml version="1.0" standalone="yes"?>
+<!--
+  EXAMPLE .appp template — reference only.
+  This is a kitchen-sink example showing every supported field plus a wide
+  set of optional DevExpress / WPF DLLs you may want to ship.
+
+  Real ATP package: ../ServiceContractPhotocopier/ServiceContractPhotocopier.appp
+  Real config:      ../PLUGIN_CONFIG.md
+  Source of truth for properties: PLUGIN_CONFIG.md (do not hand-edit the .appp)
+
+  Field notes:
+    - Guid:        one-time, NEVER change after first install.
+    - Version:     bump every release; AutoCount uses it for upgrade detection.
+    - AssemblyFile: filename only of the MAIN plugin DLL (no path).
+    - <Files>:     one block per shipped file. Paths relative to the .appp file.
+                   ExecuteAfterExtracted=false unless it's an installer/script.
+    - MinimumAccountingVersion: lowest AC version supported (e.g. 2.0.2).
+-->
+<AutoCount_x0020_Plug-in_x0020_Package_x0020_Project>
+  <Properties>
+    <ProjectFileVersion>1.0</ProjectFileVersion>
+    <Guid>00000000-0000-0000-0000-000000000000</Guid>
+    <Name>Example Plugin Name</Name>
+    <Version>1.0.0.0</Version>
+    <Manufacturer>Vec Tech Solutions</Manufacturer>
+    <ManufacturerUrl>https://www.facebook.com/VecTechSolutions</ManufacturerUrl>
+    <Copyright>Copyright ©  2026 Vec Tech Solutions</Copyright>
+    <SalesPhone>+601117758060</SalesPhone>
+    <SupportPhone>+601117758060</SupportPhone>
+    <Description>One-line description of what this plugin does inside AutoCount.</Description>
+    <WhatsNew>1. Initial release.
+2. Add second-line release notes here.</WhatsNew>
+    <AssemblyFile>YourMainPlugin.dll</AssemblyFile>
+    <MinimumAccountingVersion>2.0.2</MinimumAccountingVersion>
+    <ScriptLanguage>C#</ScriptLanguage>
+  </Properties>
+
+  <!-- Required: main plugin DLL + PDB -->
+  <Files>
+    <Filename>.\bin\Debug\YourMainPlugin.dll</Filename>
+    <ExecuteAfterExtracted>false</ExecuteAfterExtracted>
+  </Files>
+  <Files>
+    <Filename>.\bin\Debug\YourMainPlugin.pdb</Filename>
+    <ExecuteAfterExtracted>false</ExecuteAfterExtracted>
+  </Files>
+
+  <!-- Required: AC plugin base from VecTech.ACPluginBase -->
+  <Files>
+    <Filename>.\bin\Debug\VecTech.ACPluginBase.dll</Filename>
+    <ExecuteAfterExtracted>false</ExecuteAfterExtracted>
+  </Files>
+  <Files>
+    <Filename>.\bin\Debug\VecTech.ACPluginBase.pdb</Filename>
+    <ExecuteAfterExtracted>false</ExecuteAfterExtracted>
+  </Files>
+
+  <!-- Optional: DevExpress 19.2 (only include the ones the plugin actually uses) -->
+  <Files><Filename>.\bin\Debug\DevExpress.Images.v19.2.dll</Filename><ExecuteAfterExtracted>false</ExecuteAfterExtracted></Files>
+  <Files><Filename>.\bin\Debug\DevExpress.Dashboard.v19.2.Core.dll</Filename><ExecuteAfterExtracted>false</ExecuteAfterExtracted></Files>
+  <Files><Filename>.\bin\Debug\DevExpress.Dashboard.v19.2.Win.dll</Filename><ExecuteAfterExtracted>false</ExecuteAfterExtracted></Files>
+  <Files><Filename>.\bin\Debug\DevExpress.Map.v19.2.Core.dll</Filename><ExecuteAfterExtracted>false</ExecuteAfterExtracted></Files>
+  <Files><Filename>.\bin\Debug\DevExpress.TreeMap.v19.2.Core.dll</Filename><ExecuteAfterExtracted>false</ExecuteAfterExtracted></Files>
+  <Files><Filename>.\bin\Debug\DevExpress.XtraGantt.v19.2.dll</Filename><ExecuteAfterExtracted>false</ExecuteAfterExtracted></Files>
+  <Files><Filename>.\bin\Debug\DevExpress.XtraMap.v19.2.dll</Filename><ExecuteAfterExtracted>false</ExecuteAfterExtracted></Files>
+  <Files><Filename>.\bin\Debug\DevExpress.XtraTreeList.v19.2.dll</Filename><ExecuteAfterExtracted>false</ExecuteAfterExtracted></Files>
+  <Files><Filename>.\bin\Debug\DevExpress.XtraTreeMap.v19.2.dll</Filename><ExecuteAfterExtracted>false</ExecuteAfterExtracted></Files>
+  <Files><Filename>.\bin\Debug\DevExpress.SpellChecker.v19.2.Core.dll</Filename><ExecuteAfterExtracted>false</ExecuteAfterExtracted></Files>
+  <Files><Filename>.\bin\Debug\DevExpress.XtraSpellChecker.v19.2.dll</Filename><ExecuteAfterExtracted>false</ExecuteAfterExtracted></Files>
+  <Files><Filename>.\bin\Debug\DevExpress.XtraGauges.v19.2.Win.dll</Filename><ExecuteAfterExtracted>false</ExecuteAfterExtracted></Files>
+  <Files><Filename>.\bin\Debug\DevExpress.XtraGauges.v19.2.Presets.dll</Filename><ExecuteAfterExtracted>false</ExecuteAfterExtracted></Files>
+
+  <!-- Optional: WPF interop -->
+  <Files><Filename>.\bin\Debug\PresentationCore.dll</Filename><ExecuteAfterExtracted>false</ExecuteAfterExtracted></Files>
+  <Files><Filename>.\bin\Debug\PresentationFramework.dll</Filename><ExecuteAfterExtracted>false</ExecuteAfterExtracted></Files>
+  <Files><Filename>.\bin\Debug\WindowsBase.dll</Filename><ExecuteAfterExtracted>false</ExecuteAfterExtracted></Files>
+
+  <!-- Optional: shared StdDXForms -->
+  <Files><Filename>.\bin\Debug\StdDXForms.dll</Filename><ExecuteAfterExtracted>false</ExecuteAfterExtracted></Files>
+  <Files><Filename>.\bin\Debug\StdDXForms.pdb</Filename><ExecuteAfterExtracted>false</ExecuteAfterExtracted></Files>
+</AutoCount_x0020_Plug-in_x0020_Package_x0020_Project>

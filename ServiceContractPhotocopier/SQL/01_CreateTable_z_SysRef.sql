@@ -1,0 +1,18 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[z_SysRef](
+	[RefID] [bigint] NOT NULL,
+	[RefGroup] [nvarchar](50) NULL,
+	[RefName] [nvarchar](50) NULL,
+	[RefDesc] [nvarchar](250) NULL,
+	[RefSeq] [numeric](18, 0) NULL,
+	[RefValue] [nvarchar](350) NULL,
+ CONSTRAINT [PK_z_SysRef] PRIMARY KEY CLUSTERED
+(
+	[RefID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
