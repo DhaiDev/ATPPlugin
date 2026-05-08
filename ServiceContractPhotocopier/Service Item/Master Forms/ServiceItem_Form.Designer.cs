@@ -30,7 +30,6 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             this.LblTitle = new DevExpress.XtraEditors.LabelControl();
             this.BtnFillTest = new DevExpress.XtraEditors.SimpleButton();
             this.BtnGenerate = new DevExpress.XtraEditors.SimpleButton();
-            this.BtnAdd = new DevExpress.XtraEditors.SimpleButton();
             this.BtnEdit = new DevExpress.XtraEditors.SimpleButton();
             this.BtnSave = new DevExpress.XtraEditors.SimpleButton();
             this.BtnCancel = new DevExpress.XtraEditors.SimpleButton();
@@ -38,7 +37,6 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             this.BtnPrint = new DevExpress.XtraEditors.SimpleButton();
             this.BtnAttachments = new DevExpress.XtraEditors.SimpleButton();
             this.BtnCopyFrom = new DevExpress.XtraEditors.SimpleButton();
-            this.BtnSearch = new DevExpress.XtraEditors.SimpleButton();
             this.BtnExit = new DevExpress.XtraEditors.SimpleButton();
             this.BtnNavFirst = new DevExpress.XtraEditors.SimpleButton();
             this.BtnNavPrev = new DevExpress.XtraEditors.SimpleButton();
@@ -317,18 +315,9 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             this.BtnGenerate.TabIndex = 2;
             this.BtnGenerate.Text = "Generate Service Item";
             // 
-            // BtnAdd
-            // 
-            this.BtnAdd.Location = new System.Drawing.Point(158, 40);
-            this.BtnAdd.Name = "BtnAdd";
-            this.BtnAdd.Size = new System.Drawing.Size(75, 28);
-            this.BtnAdd.TabIndex = 3;
-            this.BtnAdd.Text = "Add (F5)";
-            this.BtnAdd.Click += new System.EventHandler(this.OnAdd);
-            // 
             // BtnEdit
             // 
-            this.BtnEdit.Location = new System.Drawing.Point(236, 40);
+            this.BtnEdit.Location = new System.Drawing.Point(160, 40);
             this.BtnEdit.Name = "BtnEdit";
             this.BtnEdit.Size = new System.Drawing.Size(78, 28);
             this.BtnEdit.TabIndex = 4;
@@ -337,7 +326,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             // 
             // BtnSave
             // 
-            this.BtnSave.Location = new System.Drawing.Point(317, 40);
+            this.BtnSave.Location = new System.Drawing.Point(241, 40);
             this.BtnSave.Name = "BtnSave";
             this.BtnSave.Size = new System.Drawing.Size(78, 28);
             this.BtnSave.TabIndex = 5;
@@ -346,7 +335,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             // 
             // BtnCancel
             // 
-            this.BtnCancel.Location = new System.Drawing.Point(398, 40);
+            this.BtnCancel.Location = new System.Drawing.Point(322, 40);
             this.BtnCancel.Name = "BtnCancel";
             this.BtnCancel.Size = new System.Drawing.Size(78, 28);
             this.BtnCancel.TabIndex = 6;
@@ -355,7 +344,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             // 
             // BtnDelete
             // 
-            this.BtnDelete.Location = new System.Drawing.Point(479, 40);
+            this.BtnDelete.Location = new System.Drawing.Point(403, 40);
             this.BtnDelete.Name = "BtnDelete";
             this.BtnDelete.Size = new System.Drawing.Size(78, 28);
             this.BtnDelete.TabIndex = 7;
@@ -364,7 +353,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             // 
             // BtnPrint
             // 
-            this.BtnPrint.Location = new System.Drawing.Point(560, 40);
+            this.BtnPrint.Location = new System.Drawing.Point(484, 40);
             this.BtnPrint.Name = "BtnPrint";
             this.BtnPrint.Size = new System.Drawing.Size(78, 28);
             this.BtnPrint.TabIndex = 8;
@@ -373,7 +362,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             // BtnAttachments
             // 
             this.BtnAttachments.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BtnAttachments.Location = new System.Drawing.Point(702, 40);
+            this.BtnAttachments.Location = new System.Drawing.Point(785, 40);
             this.BtnAttachments.Name = "BtnAttachments";
             this.BtnAttachments.Size = new System.Drawing.Size(85, 28);
             this.BtnAttachments.TabIndex = 9;
@@ -383,21 +372,12 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             // BtnCopyFrom
             // 
             this.BtnCopyFrom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BtnCopyFrom.Location = new System.Drawing.Point(790, 40);
+            this.BtnCopyFrom.Location = new System.Drawing.Point(873, 40);
             this.BtnCopyFrom.Name = "BtnCopyFrom";
             this.BtnCopyFrom.Size = new System.Drawing.Size(85, 28);
             this.BtnCopyFrom.TabIndex = 10;
             this.BtnCopyFrom.Text = "Copy From...";
             this.BtnCopyFrom.Click += new System.EventHandler(this.OnCopyFrom);
-            // 
-            // BtnSearch
-            // 
-            this.BtnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BtnSearch.Location = new System.Drawing.Point(878, 40);
-            this.BtnSearch.Name = "BtnSearch";
-            this.BtnSearch.Size = new System.Drawing.Size(80, 28);
-            this.BtnSearch.TabIndex = 11;
-            this.BtnSearch.Text = "Search (F3)";
             // 
             // BtnExit
             // 
@@ -634,7 +614,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             this.LkAgentCode.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.LkAgentCode.Properties.NullText = "";
-            this.LkAgentCode.Size = new System.Drawing.Size(100, 20);
+            this.LkAgentCode.Size = new System.Drawing.Size(150, 20);
             this.LkAgentCode.TabIndex = 113;
             // 
             // LblAgentName
@@ -648,7 +628,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             // 
             // LblTerm
             // 
-            this.LblTerm.Location = new System.Drawing.Point(355, 127);
+            this.LblTerm.Location = new System.Drawing.Point(305, 127);
             this.LblTerm.Name = "LblTerm";
             this.LblTerm.Size = new System.Drawing.Size(24, 13);
             this.LblTerm.TabIndex = 115;
@@ -656,7 +636,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             // 
             // LkTerm
             // 
-            this.LkTerm.Location = new System.Drawing.Point(395, 124);
+            this.LkTerm.Location = new System.Drawing.Point(359, 124);
             this.LkTerm.Name = "LkTerm";
             this.LkTerm.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
@@ -689,7 +669,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             // 
             // LkArea
             // 
-            this.LkArea.Location = new System.Drawing.Point(345, 152);
+            this.LkArea.Location = new System.Drawing.Point(359, 154);
             this.LkArea.Name = "LkArea";
             this.LkArea.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
@@ -717,7 +697,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             // 
             // LblUnitPrice
             // 
-            this.LblUnitPrice.Location = new System.Drawing.Point(270, 183);
+            this.LblUnitPrice.Location = new System.Drawing.Point(305, 183);
             this.LblUnitPrice.Name = "LblUnitPrice";
             this.LblUnitPrice.Size = new System.Drawing.Size(45, 13);
             this.LblUnitPrice.TabIndex = 123;
@@ -730,7 +710,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             0,
             0,
             0});
-            this.SpnUnitPrice.Location = new System.Drawing.Point(340, 180);
+            this.SpnUnitPrice.Location = new System.Drawing.Point(359, 180);
             this.SpnUnitPrice.Name = "SpnUnitPrice";
             this.SpnUnitPrice.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
@@ -756,7 +736,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             // 
             this.TxtDescription.Location = new System.Drawing.Point(110, 208);
             this.TxtDescription.Name = "TxtDescription";
-            this.TxtDescription.Size = new System.Drawing.Size(480, 20);
+            this.TxtDescription.Size = new System.Drawing.Size(449, 20);
             this.TxtDescription.TabIndex = 126;
             // 
             // LblContractNo
@@ -1080,7 +1060,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             this.PageMoreHeader.Controls.Add(this.TxtMHRef4);
             this.PageMoreHeader.Controls.Add(this.GrpDelivery);
             this.PageMoreHeader.Name = "PageMoreHeader";
-            this.PageMoreHeader.Size = new System.Drawing.Size(1158, 405);
+            this.PageMoreHeader.Size = new System.Drawing.Size(1158, 363);
             this.PageMoreHeader.Text = "2. More Header";
             // 
             // LblMHCity
@@ -1462,7 +1442,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             // 
             this.PageNotes.Controls.Add(this.TxtNote);
             this.PageNotes.Name = "PageNotes";
-            this.PageNotes.Size = new System.Drawing.Size(1158, 405);
+            this.PageNotes.Size = new System.Drawing.Size(1158, 363);
             this.PageNotes.Text = "3. Note";
             // 
             // TxtNote
@@ -1470,7 +1450,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             this.TxtNote.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TxtNote.Location = new System.Drawing.Point(0, 0);
             this.TxtNote.Name = "TxtNote";
-            this.TxtNote.Size = new System.Drawing.Size(1158, 405);
+            this.TxtNote.Size = new System.Drawing.Size(1158, 363);
             this.TxtNote.TabIndex = 500;
             // 
             // PageRemarks
@@ -1484,7 +1464,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             this.PageRemarks.Controls.Add(this.LblR4);
             this.PageRemarks.Controls.Add(this.TxtRemark4);
             this.PageRemarks.Name = "PageRemarks";
-            this.PageRemarks.Size = new System.Drawing.Size(1158, 405);
+            this.PageRemarks.Size = new System.Drawing.Size(1158, 363);
             this.PageRemarks.Text = "4. Remarks";
             // 
             // LblR1
@@ -1559,7 +1539,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             // 
             this.PageMeterHistory.Controls.Add(this.GridMeterHistory);
             this.PageMeterHistory.Name = "PageMeterHistory";
-            this.PageMeterHistory.Size = new System.Drawing.Size(1158, 405);
+            this.PageMeterHistory.Size = new System.Drawing.Size(1158, 363);
             this.PageMeterHistory.Text = "5. Service Note History";
             // 
             // GridMeterHistory
@@ -1568,7 +1548,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             this.GridMeterHistory.Location = new System.Drawing.Point(0, 0);
             this.GridMeterHistory.MainView = this.GridViewMH;
             this.GridMeterHistory.Name = "GridMeterHistory";
-            this.GridMeterHistory.Size = new System.Drawing.Size(1158, 405);
+            this.GridMeterHistory.Size = new System.Drawing.Size(1158, 363);
             this.GridMeterHistory.TabIndex = 600;
             this.GridMeterHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.GridViewMH});
@@ -1625,7 +1605,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             // 
             this.PageDebtorHistory.Controls.Add(this.GridDebtorHistory);
             this.PageDebtorHistory.Name = "PageDebtorHistory";
-            this.PageDebtorHistory.Size = new System.Drawing.Size(1158, 405);
+            this.PageDebtorHistory.Size = new System.Drawing.Size(1158, 363);
             this.PageDebtorHistory.Text = "6. Debtors Ownership History";
             // 
             // GridDebtorHistory
@@ -1634,7 +1614,7 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             this.GridDebtorHistory.Location = new System.Drawing.Point(0, 0);
             this.GridDebtorHistory.MainView = this.GridViewDH;
             this.GridDebtorHistory.Name = "GridDebtorHistory";
-            this.GridDebtorHistory.Size = new System.Drawing.Size(1158, 405);
+            this.GridDebtorHistory.Size = new System.Drawing.Size(1158, 363);
             this.GridDebtorHistory.TabIndex = 700;
             this.GridDebtorHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.GridViewDH});
@@ -1957,7 +1937,6 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             this.Controls.Add(this.LblTitle);
             this.Controls.Add(this.BtnFillTest);
             this.Controls.Add(this.BtnGenerate);
-            this.Controls.Add(this.BtnAdd);
             this.Controls.Add(this.BtnEdit);
             this.Controls.Add(this.BtnSave);
             this.Controls.Add(this.BtnCancel);
@@ -1965,7 +1944,6 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             this.Controls.Add(this.BtnPrint);
             this.Controls.Add(this.BtnAttachments);
             this.Controls.Add(this.BtnCopyFrom);
-            this.Controls.Add(this.BtnSearch);
             this.Controls.Add(this.BtnExit);
             this.Controls.Add(this.BtnNavFirst);
             this.Controls.Add(this.BtnNavPrev);
@@ -2078,7 +2056,6 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
         private DevExpress.XtraEditors.LabelControl LblTitle;
         private DevExpress.XtraEditors.SimpleButton BtnFillTest;
         private DevExpress.XtraEditors.SimpleButton BtnGenerate;
-        private DevExpress.XtraEditors.SimpleButton BtnAdd;
         private DevExpress.XtraEditors.SimpleButton BtnEdit;
         private DevExpress.XtraEditors.SimpleButton BtnSave;
         private DevExpress.XtraEditors.SimpleButton BtnCancel;
@@ -2086,7 +2063,6 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
         private DevExpress.XtraEditors.SimpleButton BtnPrint;
         private DevExpress.XtraEditors.SimpleButton BtnAttachments;
         private DevExpress.XtraEditors.SimpleButton BtnCopyFrom;
-        private DevExpress.XtraEditors.SimpleButton BtnSearch;
         private DevExpress.XtraEditors.SimpleButton BtnExit;
         private DevExpress.XtraEditors.SimpleButton BtnNavFirst;
         private DevExpress.XtraEditors.SimpleButton BtnNavPrev;
