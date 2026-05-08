@@ -11,6 +11,7 @@ using ServiceContractPhotocopier.ServiceAppointment.OperationForms;
 using ServiceContractPhotocopier.ServiceContract.OperationForms;
 using ServiceContractPhotocopier.ServiceItem.MasterForms;
 using ServiceContractPhotocopier.ServiceNote.OperationForms;
+using ServiceContractPhotocopier.StockRequest.OperationForms;
 
 namespace ATPShadowMain
 {
@@ -90,6 +91,9 @@ namespace ATPShadowMain
             // --- General Setup: Meter ---
             list.Add(new CatalogEntry("Setup - Meter", "Meter Type",          db => new MeterTypeLst_Form(db)));
             list.Add(new CatalogEntry("Setup - Meter", "Meter Multi Pricing", db => new MeterMultiPricingLst_Form(db)));
+
+            // --- Stock Request ---
+            list.Add(new CatalogEntry("Stock Request", "Stock Request Integration", db => new StockRequestIntegration_Form(db)));
 
             // --- Service Option ---
             list.Add(new CatalogEntry("Service Option", "Service Option", db => new ServiceOption_Form(db)));

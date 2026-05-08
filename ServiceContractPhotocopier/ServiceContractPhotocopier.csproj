@@ -557,6 +557,12 @@
     <Compile Include="Reports\MeterTypeListingReport_Form.Designer.cs">
       <DependentUpon>MeterTypeListingReport_Form.cs</DependentUpon>
     </Compile>
+    <Compile Include="Stock Request\Operation Forms\StockRequestIntegration_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Stock Request\Operation Forms\StockRequestIntegration_Form.Designer.cs">
+      <DependentUpon>StockRequestIntegration_Form.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\licenses.licx" />
@@ -814,6 +820,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\MeterTypeListingReport_Form.resx">
       <DependentUpon>MeterTypeListingReport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Stock Request\Operation Forms\StockRequestIntegration_Form.resx">
+      <DependentUpon>StockRequestIntegration_Form.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
