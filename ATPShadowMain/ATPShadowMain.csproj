@@ -61,6 +61,10 @@
     <Reference Include="DevExpress.Data.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
+    <Reference Include="DevExpress.Drawing.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\DevExpress.Drawing.v22.2.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DevExpress.Utils.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>

@@ -881,14 +881,12 @@ namespace ServiceContractPhotocopier.ServiceItem.MasterForms
             // All tab pages: enable container; individual editors follow Enabled cascade.
             TabMain.Enabled = editable;
 
-            // Header buttons
-            BtnAdd.Enabled = (_mode == FormMode.View || _mode == FormMode.New);
+            // Header buttons (BtnAdd/BtnSearch removed during LayoutControl checkpoint)
             BtnEdit.Enabled = (_mode == FormMode.View && _serviceItemKey > 0);
             BtnSave.Enabled = editable;
             BtnCancel.Enabled = true;
             BtnDelete.Enabled = (_mode == FormMode.View && _serviceItemKey > 0);
             BtnPrint.Enabled = (_mode == FormMode.View && _serviceItemKey > 0);
-            BtnSearch.Enabled = (_mode == FormMode.View);
             BtnAttachments.Enabled = (_mode == FormMode.View && _serviceItemKey > 0);
             BtnCopyFrom.Enabled = (_mode == FormMode.New);
             BtnGenerate.Enabled = editable;

@@ -14,30 +14,20 @@ using DevExpress.XtraTab.ViewInfo;
 namespace ATPShadowMain
 {
     /// <summary>
-    /// Tabbed dev shell — left NavBar + top XtraTabControl + content panel.
-    /// Click nav -> open existing form embedded inside a new tab page (TopLevel=false,
-    /// FormBorderStyle=None, Dock=Fill). Plugin form code is NOT modified — every form
-    /// is hosted as-is. Switching tabs is instant (no reload). Each tab has an X to close
-    /// and dispose the embedded form. The first tab "Master Menu" is permanent.
+    /// Tabbed dev shell — chrome (top bar / nav / tabs / status) lives in the
+    /// Designer file so VS Designer can render and edit it. Dynamic content
+    /// (KPI cards, quick-access tiles, NavBar items from the catalog) is added
+    /// at runtime since it's data-driven and can't be expressed in the designer.
     /// </summary>
     public partial class ShadowLauncherV2_Form : XtraForm
     {
         private readonly DBSetting _db;
 
-        // chrome
-        private PanelControl _topBar;
-        private LabelControl _lblBreadcrumb;
-        private SimpleButton _btnRefresh;
-        private NavBarControl _nav;
-        private XtraTabControl _tabs;
-        private LabelControl _lblStatus;
-
-        // tab tracking — entry-title -> page so we don't reopen duplicates
+        // Tab tracking — entry-title -> page so we don't reopen duplicates
         private readonly Dictionary<string, XtraTabPage> _openTabs =
             new Dictionary<string, XtraTabPage>(StringComparer.OrdinalIgnoreCase);
-        private XtraTabPage _masterTab;
 
-        // dashboard state
+        // Dynamic dashboard state (created at runtime, parented to PanelDashboard)
         private LabelControl[] _kpiValues = new LabelControl[5];
         private static readonly string[] KPI_TABLES =
             { "zSCP_ServiceContract", "zSCP_ServiceItem", "zSCP_ServiceNote", "zSCP_Appointment", "zSCP_MeterTrans" };
@@ -51,103 +41,28 @@ namespace ATPShadowMain
             Color.FromArgb(244, 67, 54)     // red
         };
 
-        // colors (inspired by the WMS Sync Hub mockup)
-        private static readonly Color CLR_TOPBAR  = Color.FromArgb(124, 179, 66);    // green
-        private static readonly Color CLR_NAVBG   = Color.FromArgb(56, 69, 82);      // dark navy
-        private static readonly Color CLR_NAVTXT  = Color.White;
-
-        public ShadowLauncherV2_Form() { InitializeComponent(); }
+        public ShadowLauncherV2_Form()
+        {
+            InitializeComponent();
+            this.BtnRefresh.Click += new EventHandler(OnRefreshClicked);
+            this.NavLeft.LinkClicked += new NavBarLinkEventHandler(OnNavLinkClicked);
+            this.TabsMain.CloseButtonClick += new EventHandler(OnTabCloseClicked);
+            this.TabsMain.SelectedPageChanged += new TabPageChangedEventHandler(OnTabChanged);
+        }
 
         public ShadowLauncherV2_Form(DBSetting db) : this()
         {
             _db = db;
-            BuildChrome();
             BuildNav();
-            BuildMasterTab();
+            BuildKpiCards();
+            BuildQuickTiles();
+            this.LblStatus.Text = BuildStatusText();
+            RefreshDashboard();
         }
 
         // ============================================================
-        // Layout
+        // Status bar
         // ============================================================
-        private void BuildChrome()
-        {
-            this.Text = "ATP Shadow Launcher V2 (tabbed)";
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.ClientSize = new Size(1280, 800);
-            this.MinimumSize = new Size(1024, 640);
-            this.WindowState = FormWindowState.Maximized;
-
-            // ---- top bar ----
-            this._topBar = new PanelControl();
-            this._topBar.Dock = DockStyle.Top;
-            this._topBar.Height = 50;
-            this._topBar.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this._topBar.Appearance.BackColor = CLR_TOPBAR;
-            this._topBar.Appearance.Options.UseBackColor = true;
-
-            this._lblBreadcrumb = new LabelControl();
-            this._lblBreadcrumb.Text = "ATP  /  Master Menu";
-            this._lblBreadcrumb.Appearance.Font = new Font("Tahoma", 14F, FontStyle.Bold);
-            this._lblBreadcrumb.Appearance.ForeColor = Color.White;
-            this._lblBreadcrumb.Appearance.BackColor = Color.Transparent;
-            this._lblBreadcrumb.Appearance.Options.UseFont = true;
-            this._lblBreadcrumb.Appearance.Options.UseForeColor = true;
-            this._lblBreadcrumb.Appearance.Options.UseBackColor = true;
-            this._lblBreadcrumb.Location = new Point(20, 14);
-            this._lblBreadcrumb.AutoSizeMode = LabelAutoSizeMode.None;
-            this._lblBreadcrumb.Size = new Size(900, 28);
-
-            this._btnRefresh = new SimpleButton();
-            this._btnRefresh.Text = "Refresh";
-            this._btnRefresh.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            this._btnRefresh.Size = new Size(90, 28);
-            this._btnRefresh.Location = new Point(this._topBar.Width - 110, 11);
-            this._btnRefresh.Click += new EventHandler(OnRefreshClicked);
-
-            this._topBar.Controls.Add(this._lblBreadcrumb);
-            this._topBar.Controls.Add(this._btnRefresh);
-
-            // ---- left nav ----
-            this._nav = new NavBarControl();
-            this._nav.Dock = DockStyle.Left;
-            this._nav.Width = 240;
-            this._nav.PaintStyleKind = NavBarViewKind.NavigationPane;
-            this._nav.OptionsNavPane.ExpandedWidth = 240;
-            this._nav.OptionsNavPane.ShowExpandButton = false;
-            this._nav.OptionsNavPane.ShowOverflowButton = false;
-            this._nav.LinkClicked += new NavBarLinkEventHandler(OnNavLinkClicked);
-
-            // ---- tab control ----
-            this._tabs = new XtraTabControl();
-            this._tabs.Dock = DockStyle.Fill;
-            this._tabs.HeaderLocation = TabHeaderLocation.Top;
-            this._tabs.HeaderOrientation = TabOrientation.Horizontal;
-            this._tabs.ClosePageButtonShowMode = ClosePageButtonShowMode.InActiveTabPageHeader;
-            this._tabs.ShowTabHeader = DefaultBoolean.True;
-            this._tabs.CloseButtonClick += new EventHandler(OnTabCloseClicked);
-            this._tabs.SelectedPageChanged += new TabPageChangedEventHandler(OnTabChanged);
-
-            // ---- status bar ----
-            this._lblStatus = new LabelControl();
-            this._lblStatus.Dock = DockStyle.Bottom;
-            this._lblStatus.Height = 22;
-            this._lblStatus.AutoSizeMode = LabelAutoSizeMode.None;
-            this._lblStatus.Appearance.BackColor = Color.FromArgb(240, 240, 240);
-            this._lblStatus.Appearance.ForeColor = Color.FromArgb(60, 60, 60);
-            this._lblStatus.Appearance.Options.UseBackColor = true;
-            this._lblStatus.Appearance.Options.UseForeColor = true;
-            this._lblStatus.Appearance.Options.UseTextOptions = true;
-            this._lblStatus.Appearance.TextOptions.HAlignment = HorzAlignment.Near;
-            this._lblStatus.Padding = new Padding(8, 4, 0, 0);
-            this._lblStatus.Text = BuildStatusText();
-
-            // Add in correct Z-order so docks compose properly
-            this.Controls.Add(this._tabs);     // fills last so it gets remaining space
-            this.Controls.Add(this._nav);      // left
-            this.Controls.Add(this._topBar);   // top
-            this.Controls.Add(this._lblStatus);// bottom
-        }
-
         private string BuildStatusText()
         {
             string user = AutoCount.Authentication.UserSession.CurrentUserSession != null
@@ -161,7 +76,7 @@ namespace ATPShadowMain
         }
 
         // ============================================================
-        // Nav
+        // Nav (dynamic — built from FormCatalog at runtime)
         // ============================================================
         private void BuildNav()
         {
@@ -176,61 +91,26 @@ namespace ATPShadowMain
                     grp = new NavBarGroup(entry.Group);
                     grp.GroupStyle = NavBarGroupStyle.SmallIconsText;
                     grp.Expanded = true;
-                    this._nav.Groups.Add(grp);
+                    this.NavLeft.Groups.Add(grp);
                     groups[entry.Group] = grp;
                 }
 
                 NavBarItem item = new NavBarItem(entry.Title);
                 item.Tag = entry;
-                this._nav.Items.Add(item);
+                this.NavLeft.Items.Add(item);
 
                 NavBarItemLink link = new NavBarItemLink(item);
                 grp.ItemLinks.Add(link);
             }
 
-            if (this._nav.Groups.Count > 0) this._nav.ActiveGroup = this._nav.Groups[0];
+            if (this.NavLeft.Groups.Count > 0) this.NavLeft.ActiveGroup = this.NavLeft.Groups[0];
         }
 
         // ============================================================
-        // Master tab — dashboard (KPIs + quick-access tiles)
+        // Dashboard — KPI cards (dynamic, parented to PanelDashboard)
         // ============================================================
-        private void BuildMasterTab()
+        private void BuildKpiCards()
         {
-            this._masterTab = new XtraTabPage();
-            this._masterTab.Text = "Master Menu";
-            this._masterTab.ShowCloseButton = DefaultBoolean.False;
-
-            PanelControl content = new PanelControl();
-            content.Dock = DockStyle.Fill;
-            content.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            content.Appearance.BackColor = Color.FromArgb(245, 247, 250);
-            content.Appearance.Options.UseBackColor = true;
-            content.AutoScroll = true;
-
-            // ---- Title ----
-            LabelControl title = new LabelControl();
-            title.Text = "Service & Contract Dashboard";
-            title.Appearance.Font = new Font("Tahoma", 18F, FontStyle.Bold);
-            title.Appearance.ForeColor = Color.FromArgb(40, 60, 110);
-            title.Appearance.Options.UseFont = true;
-            title.Appearance.Options.UseForeColor = true;
-            title.Location = new Point(24, 18);
-            title.AutoSizeMode = LabelAutoSizeMode.None;
-            title.Size = new Size(800, 32);
-            content.Controls.Add(title);
-
-            LabelControl subtitle = new LabelControl();
-            subtitle.Text = "Live counts from your AED_ATPLUGIN001 database. Click a tile below for one-click access.";
-            subtitle.Appearance.Font = new Font("Tahoma", 9F);
-            subtitle.Appearance.ForeColor = Color.FromArgb(110, 120, 140);
-            subtitle.Appearance.Options.UseFont = true;
-            subtitle.Appearance.Options.UseForeColor = true;
-            subtitle.Location = new Point(24, 52);
-            subtitle.AutoSizeMode = LabelAutoSizeMode.None;
-            subtitle.Size = new Size(800, 18);
-            content.Controls.Add(subtitle);
-
-            // ---- KPI cards row ----
             int kpiY = 84;
             int kpiW = 180;
             int kpiH = 96;
@@ -276,23 +156,15 @@ namespace ATPShadowMain
                 cap.AutoSizeMode = LabelAutoSizeMode.None;
                 card.Controls.Add(cap);
 
-                content.Controls.Add(card);
+                this.PanelDashboard.Controls.Add(card);
             }
+        }
 
-            // ---- "Quick Access" section title ----
-            int sectionY = kpiY + kpiH + 28;
-            LabelControl section = new LabelControl();
-            section.Text = "Quick Access";
-            section.Appearance.Font = new Font("Tahoma", 14F, FontStyle.Bold);
-            section.Appearance.ForeColor = Color.FromArgb(40, 60, 110);
-            section.Appearance.Options.UseFont = true;
-            section.Appearance.Options.UseForeColor = true;
-            section.Location = new Point(24, sectionY);
-            section.AutoSizeMode = LabelAutoSizeMode.None;
-            section.Size = new Size(400, 26);
-            content.Controls.Add(section);
-
-            // ---- 6 tiles, 3 per row ----
+        // ============================================================
+        // Dashboard — Quick Access tiles (dynamic)
+        // ============================================================
+        private void BuildQuickTiles()
+        {
             QuickTile[] tiles = new QuickTile[]
             {
                 new QuickTile("Key Meter Reading",     "Record meter + generate invoice", Color.FromArgb(244, 67, 54),  "Meter Type Trans Entry"),
@@ -302,7 +174,7 @@ namespace ATPShadowMain
                 new QuickTile("Service Quick View",    "Snapshot inquiry",                Color.FromArgb(96, 125, 139), "Service Quick View"),
                 new QuickTile("Appointment Calendar",  "Today's & upcoming visits",       Color.FromArgb(156, 39, 176), "Appointment Calendar")
             };
-            int tileY = sectionY + 36;
+            int tileY = this.LblQuickAccess.Bottom + 10;
             int tileW = 300;
             int tileH = 88;
             int tileGap = 14;
@@ -311,17 +183,11 @@ namespace ATPShadowMain
             {
                 int row = i / cols;
                 int col = i % cols;
-                content.Controls.Add(BuildTile(
+                this.PanelDashboard.Controls.Add(BuildTile(
                     tiles[i],
                     new Point(24 + col * (tileW + tileGap), tileY + row * (tileH + tileGap)),
                     new Size(tileW, tileH)));
             }
-
-            this._masterTab.Controls.Add(content);
-            this._tabs.TabPages.Add(this._masterTab);
-            this._tabs.SelectedTabPage = this._masterTab;
-
-            RefreshDashboard();
         }
 
         private sealed class QuickTile
@@ -409,7 +275,7 @@ namespace ATPShadowMain
             XtraTabPage existing;
             if (this._openTabs.TryGetValue(title, out existing))
             {
-                this._tabs.SelectedTabPage = existing;
+                this.TabsMain.SelectedTabPage = existing;
                 return;
             }
             foreach (CatalogEntry entry in FormCatalog.All())
@@ -446,7 +312,7 @@ namespace ATPShadowMain
             XtraTabPage existing;
             if (this._openTabs.TryGetValue(entry.Title, out existing))
             {
-                this._tabs.SelectedTabPage = existing;
+                this.TabsMain.SelectedTabPage = existing;
                 return;
             }
 
@@ -487,11 +353,11 @@ namespace ATPShadowMain
             page.Controls.Add(frm);
             frm.Show();   // makes it visible inside the panel
 
-            this._tabs.TabPages.Add(page);
+            this.TabsMain.TabPages.Add(page);
             this._openTabs[entry.Title] = page;
-            this._tabs.SelectedTabPage = page;
+            this.TabsMain.SelectedTabPage = page;
 
-            this._lblStatus.Text = BuildStatusText();
+            this.LblStatus.Text = BuildStatusText();
         }
 
         private void OnTabCloseClicked(object sender, EventArgs e)
@@ -499,7 +365,7 @@ namespace ATPShadowMain
             ClosePageButtonEventArgs args = e as ClosePageButtonEventArgs;
             if (args == null) return;
             XtraTabPage page = args.Page as XtraTabPage;
-            if (page == null || page == this._masterTab) return;
+            if (page == null || page == this.TabPageMaster) return;
 
             CloseTab(page);
         }
@@ -516,7 +382,7 @@ namespace ATPShadowMain
             }
             if (key != null) this._openTabs.Remove(key);
 
-            this._tabs.TabPages.Remove(page);
+            this.TabsMain.TabPages.Remove(page);
 
             if (frm != null && !frm.IsDisposed)
             {
@@ -526,7 +392,7 @@ namespace ATPShadowMain
             }
             page.Dispose();
 
-            this._lblStatus.Text = BuildStatusText();
+            this.LblStatus.Text = BuildStatusText();
         }
 
         private void OnEmbeddedFormClosed(object sender, FormClosedEventArgs e)
@@ -536,36 +402,36 @@ namespace ATPShadowMain
 
             // Find the matching tab and remove it
             XtraTabPage owning = null;
-            foreach (XtraTabPage p in this._tabs.TabPages)
+            foreach (XtraTabPage p in this.TabsMain.TabPages)
             {
                 if (ReferenceEquals(p.Tag, frm)) { owning = p; break; }
             }
-            if (owning != null && owning != this._masterTab) CloseTab(owning);
+            if (owning != null && owning != this.TabPageMaster) CloseTab(owning);
         }
 
         private void OnTabChanged(object sender, TabPageChangedEventArgs e)
         {
             if (e.Page != null)
-                this._lblBreadcrumb.Text = "ATP  /  " + e.Page.Text;
+                this.LblBreadcrumb.Text = "ATP  /  " + e.Page.Text;
             // When user comes back to the Master tab, refresh the KPIs so counts stay live.
-            if (e.Page == this._masterTab) RefreshDashboard();
+            if (e.Page == this.TabPageMaster) RefreshDashboard();
         }
 
         private void OnRefreshClicked(object sender, EventArgs e)
         {
             // On Master tab → refresh dashboard counts. On any other tab → nudge the
             // embedded form to repaint (most grids re-query on their own Activated event).
-            if (this._tabs.SelectedTabPage == this._masterTab)
+            if (this.TabsMain.SelectedTabPage == this.TabPageMaster)
             {
                 RefreshDashboard();
             }
-            else if (this._tabs.SelectedTabPage != null)
+            else if (this.TabsMain.SelectedTabPage != null)
             {
-                this._tabs.SelectedTabPage.Refresh();
-                Form frm = this._tabs.SelectedTabPage.Tag as Form;
+                this.TabsMain.SelectedTabPage.Refresh();
+                Form frm = this.TabsMain.SelectedTabPage.Tag as Form;
                 if (frm != null) try { frm.Refresh(); } catch { }
             }
-            this._lblStatus.Text = BuildStatusText();
+            this.LblStatus.Text = BuildStatusText();
         }
     }
 }
