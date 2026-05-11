@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATPShadowMain", "ATPShadowM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceContractPhotocopier", "ServiceContractPhotocopier\ServiceContractPhotocopier.csproj", "{6A996121-169E-4D35-AEED-58CFBB1386B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VTACPluginBase", "..\AutoCount-Plugin-Base\VTACPluginBase.csproj", "{4B29BA5B-1103-4801-8BB6-18BA86F1D9D8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VTACPluginBase", "VTACPluginBase\VTACPluginBase.csproj", "{4B29BA5B-1103-4801-8BB6-18BA86F1D9D8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATPCli", "ATPCli\ATPCli.csproj", "{36DBACA8-0DC5-4F1D-A1F6-EDAF86073F10}"
 EndProject

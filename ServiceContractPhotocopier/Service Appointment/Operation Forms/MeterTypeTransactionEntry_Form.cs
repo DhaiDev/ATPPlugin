@@ -518,6 +518,48 @@ namespace ServiceContractPhotocopier.ServiceAppointment.OperationForms
             }
         }
 
+        // ───────────────────── Fetch Reading (demo) ─────────────────────
+        // Confirmation -> random 5-digit reading written into every visible row's
+        // CurrentReading. Tick the unlabeled checkbox next to the button to flip
+        // into demo-failure mode (Contract No not found).
+        private static readonly Random _fetchRng = new Random();
+
+        private void OnFetchReading(object sender, EventArgs e)
+        {
+            if (this.ChkSimulateFailure.Checked)
+            {
+                DevExpress.XtraEditors.XtraMessageBox.Show(
+                    "Unable to fetch:\r\nReason: Contract No not found.\r\nPlease use key in manual reading.",
+                    "Fetch Reading",
+                    System.Windows.Forms.MessageBoxButtons.OK,
+                    System.Windows.Forms.MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (GridViewMeter.RowCount == 0)
+            {
+                DevExpress.XtraEditors.XtraMessageBox.Show(
+                    "No meter rows to fetch.",
+                    "Fetch Reading",
+                    System.Windows.Forms.MessageBoxButtons.OK,
+                    System.Windows.Forms.MessageBoxIcon.Information);
+                return;
+            }
+
+            System.Windows.Forms.DialogResult ans = DevExpress.XtraEditors.XtraMessageBox.Show(
+                "Fetch the latest reading from the device for " + GridViewMeter.RowCount + " row(s)?",
+                "Fetch Reading",
+                System.Windows.Forms.MessageBoxButtons.OKCancel,
+                System.Windows.Forms.MessageBoxIcon.Question);
+            if (ans != System.Windows.Forms.DialogResult.OK) return;
+
+            for (int i = 0; i < GridViewMeter.RowCount; i++)
+            {
+                int reading = _fetchRng.Next(10000, 100000); // 5-digit
+                GridViewMeter.SetRowCellValue(i, "CurrentReading", (decimal)reading);
+            }
+        }
+
         // ───────────────────── Save & Generate Invoice ─────────────────────
         private void OnSaveAndGenerateInvoice(object sender, EventArgs e)
         {

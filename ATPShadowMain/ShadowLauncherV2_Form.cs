@@ -48,6 +48,40 @@ namespace ATPShadowMain
             this.NavLeft.LinkClicked += new NavBarLinkEventHandler(OnNavLinkClicked);
             this.TabsMain.CloseButtonClick += new EventHandler(OnTabCloseClicked);
             this.TabsMain.SelectedPageChanged += new TabPageChangedEventHandler(OnTabChanged);
+            this.FormClosing += new FormClosingEventHandler(OnLauncherClosing);
+            this.FormClosed += new FormClosedEventHandler(OnLauncherClosed);
+        }
+
+        private static void DiagLog(string msg)
+        {
+            try
+            {
+                string path = System.IO.Path.Combine(
+                    System.IO.Path.GetDirectoryName(typeof(ShadowLauncherV2_Form).Assembly.Location) ?? ".",
+                    "shadowmain.log");
+                System.IO.File.AppendAllText(path, DateTime.Now.ToString("HH:mm:ss.fff") + "  " + msg + "\r\n");
+            }
+            catch { }
+        }
+
+        private void OnLauncherClosing(object sender, FormClosingEventArgs e)
+        {
+            // Block the DevExpress evaluation-popup timer's Application.Exit() call.
+            // Under VS debugger, DX skips this; under direct exec it kills the launcher
+            // ~6 seconds after startup. Cancelling ApplicationExitCall here keeps the
+            // dev launcher alive. UserClosing (X button) still closes normally.
+            if (e.CloseReason == CloseReason.ApplicationExitCall)
+            {
+                DiagLog("FormClosing CANCELLED reason=ApplicationExitCall (DevExpress eval timer suppressed)");
+                e.Cancel = true;
+                return;
+            }
+            DiagLog("FormClosing reason=" + e.CloseReason);
+        }
+
+        private void OnLauncherClosed(object sender, FormClosedEventArgs e)
+        {
+            DiagLog("FormClosed reason=" + e.CloseReason);
         }
 
         public ShadowLauncherV2_Form(DBSetting db) : this()

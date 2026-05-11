@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "grep_base_list",
+			"type": "shell",
+			"command": "grep",
+			"args": [
+				"\"CboFilter02_CBox_SelectedIndexChanged\"",
+				"d:\\VecTech\\OneDrive\\VecTech\\Base Projects\\VecTech-AutoCount Plugin Base\\VTACPluginBase\\Base Forms\\List\\BaseList_Form.cs"
+			],
+			"isBackground": false,
+			"group": "search"
+		}
+	]
+}

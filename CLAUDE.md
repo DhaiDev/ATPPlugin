@@ -71,10 +71,9 @@ Never edit the `.appp` by hand. Never open GUI AppBuilder.
 ATP is an AutoCount plugin project focused on **Service & Contract** management for a photocopier business. It is built on top of the user's AutoCount plugin base framework.
 
 ## Reference Projects
-These live as siblings under `C:/Dev/Plugin/` and should be consulted (read-only) when building ATP:
 
-- **`../AutoCount-Plugin-Base`** — The user's own AutoCount plugin base project (`VTACPluginBase.csproj`). Contains `PlugIn_Cls.cs`, `MainPI_Form`, Base Forms, Common Forms, Classes, Examples. Clone / reuse patterns from here as the foundation.
-- **`../AutoCount-Plugin-Sample-BookHub`** — A recent sample plugin (`BookHubACPlugin.sln`) showing how to consume the plugin base. Includes `VTSMainAutocountPlugin`, `VTSSubAutocountPlugin`, `TestSamplePlugins`. Use as the worked example for wiring up an ATP plugin.
+- **`VTACPluginBase/`** (in-tree) — The user's AutoCount plugin base project (`VTACPluginBase.csproj`), referenced by `ServiceContractPhotocopier.csproj` via ProjectReference. Contains `PlugIn_Cls.cs`, `MainPI_Form`, Base Forms, Common Forms, Classes, Examples. Forked into ATP from `scchang1127/AutoCount-Plugin-Base` — edit freely; no upstream sync.
+- **`../AutoCount-Plugin-Sample-BookHub`** (sibling, read-only) — A recent sample plugin (`BookHubACPlugin.sln`) showing how to consume the plugin base. Includes `VTSMainAutocountPlugin`, `VTSSubAutocountPlugin`, `TestSamplePlugins`. Use as the worked example for wiring up an ATP plugin.
 
 ## Databases
 
@@ -163,5 +162,5 @@ The `.appp` is a plain XML manifest — no need to open GUI AppBuilder. We maint
 - `C:\Dev\Autocount\PluginBuilder` — source for AppBuilder/AppBuilderCmd/AppViewer
 
 ## Working notes
-- When starting implementation, pull structure/patterns from `AutoCount-Plugin-Base`, and follow the integration style demonstrated in `AutoCount-Plugin-Sample-BookHub`.
+- When starting implementation, pull structure/patterns from the in-tree `VTACPluginBase/`, and follow the integration style demonstrated in `../AutoCount-Plugin-Sample-BookHub`.
 - Keep ATP focused on Service & Contract features; don't re-implement base framework concerns — reference them.

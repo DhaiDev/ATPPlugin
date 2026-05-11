@@ -90,9 +90,16 @@ namespace ATPShadowMain
 
             if (ok)
             {
-                Log("Run: opening ShadowLauncherV2_Form");
-                Application.Run(new ShadowLauncherV2_Form(userSession.DBSetting));
-                Log("Run: launcher closed");
+                // ── Pick which form to open here. Edit this one line, F5, done. ──
+                // Examples:
+                //   Application.Run(new ServiceContractPhotocopier.ServiceContract.OperationForms.ServiceContractLst_Form(userSession.DBSetting));
+                //   Application.Run(new ServiceContractPhotocopier.ServiceItem.MasterForms.ServiceItem_Form(userSession.DBSetting));
+                //   Application.Run(new ServiceContractPhotocopier.ServiceNote.OperationForms.ServiceNoteLst_Form(userSession.DBSetting));
+                //   Application.Run(new ServiceContractPhotocopier.StockRequest.OperationForms.StockRequestIntegration_Form(userSession.DBSetting));
+                //   Application.Run(new ATPShadowMain.ShadowLauncherV2_Form(userSession.DBSetting));   // tabbed shell (has DX-eval popup quirk)
+                Log("Run: opening form");
+                Application.Run(new ServiceContractPhotocopier.ServiceItem.MasterForms.ServiceItemLst_Form(userSession.DBSetting));
+                Log("Run: form closed");
             }
             else
             {

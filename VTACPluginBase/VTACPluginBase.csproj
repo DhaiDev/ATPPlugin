@@ -1,0 +1,441 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4B29BA5B-1103-4801-8BB6-18BA86F1D9D8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VTACPluginBase</RootNamespace>
+    <AssemblyName>VecTech.ACPluginBase</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>false</Deterministic>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoCount">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.Accounting">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Accounting.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.Accounting.UI">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Accounting.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.ARAP">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.ARAP.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.BusinessFlow">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.BusinessFlow.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.FinancialReport">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.FinancialReport.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.GeneralMaint">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.GeneralMaint.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.GL">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.GL.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.GST">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.GST.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.Image100p">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Image100p.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.Image125p">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Image125p.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.Image150p">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Image150p.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.Image175p">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Image175p.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.Image200p">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Image200p.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.Image500p">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Image500p.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.Images">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Images.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.ImportExport">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.ImportExport.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.Inquiry">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Inquiry.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.Invoicing">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Invoicing.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.MainEntry">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.MainEntry.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.MainEntry.XmlSerializers">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.MainEntry.XmlSerializers.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.ManageAccountBook">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.ManageAccountBook.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.ManagementStudio">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.ManagementStudio.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.Manufacturing">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Manufacturing.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.Purchase">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Purchase.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.Sales">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Sales.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.StartScreen">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.StartScreen.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.Stock">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Stock.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.StockMaint">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.StockMaint.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.Tools">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.Tools.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.UI">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoCount.UI.XmlSerializers">
+      <HintPath>C:\Program Files\AutoCount\Accounting 2.2\AutoCount.UI.XmlSerializers.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.BonusSkins.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Drawing.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Data.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.DataAccess.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.DataAccess.v22.2.UI, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Images.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Data.Desktop.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Utils.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Utils.v22.2.UI, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraBars.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraEditors.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraGrid.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraLayout.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraNavBar.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Printing.v22.2.Core, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.PivotGrid.v22.2.Core, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraPivotGrid.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Office.v22.2.Core, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.RichEdit.v22.2.Core, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraRichEdit.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraTreeList.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraVerticalGrid.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraWizard.v22.2, Version=22.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base Forms\Editor\BaseEditor_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Base Forms\Editor\BaseEditor_Form.Designer.cs">
+      <DependentUpon>BaseEditor_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Base Forms\FormHelper.cs" />
+    <Compile Include="Base Forms\List\BaseList_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Base Forms\List\BaseList_Form.Designer.cs">
+      <DependentUpon>BaseList_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\AutoCount Generator\ACHelper_Cls.cs" />
+    <Compile Include="Classes\AutoCount Generator\CategoryGLARAP_Cls.cs" />
+    <Compile Include="Classes\AutoCount Generator\CategoryPurchase_Cls.cs" />
+    <Compile Include="Classes\AutoCount Generator\CategorySales_Cls.cs" />
+    <Compile Include="Classes\Business Base\BusinessBaseDTLV2_0_0_Cls.cs" />
+    <Compile Include="Classes\Business Base\BusinessBaseDTL_Cls.cs" />
+    <Compile Include="Classes\Business Base\BusinessBaseV2_0_0_Cls.cs" />
+    <Compile Include="Classes\Business Base\BusinessBase_Cls.cs" />
+    <Compile Include="Classes\DevExpress Extensions\DXEx_Cls.cs" />
+    <Compile Include="Classes\DI\ContainerAdapters.cs" />
+    <Compile Include="Classes\DI\DIConfiguration.cs" />
+    <Compile Include="Classes\DI\ServiceLocator.cs" />
+    <Compile Include="Classes\Helpers\AutoCountHelper.cs" />
+    <Compile Include="Classes\Helpers\GeneralHelper.cs" />
+    <Compile Include="Classes\Helpers\SystemHelper.cs" />
+    <Compile Include="Classes\NameCard_Cls.cs" />
+    <Compile Include="Classes\Text Logger\TextLogger_Cls.cs" />
+    <Compile Include="Common Forms\DeleteDlg_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common Forms\DeleteDlg_Form.Designer.cs">
+      <DependentUpon>DeleteDlg_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common Forms\EditFurtherDescription_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common Forms\EditFurtherDescription_Form.Designer.cs">
+      <DependentUpon>EditFurtherDescription_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common Forms\FilterImport_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common Forms\FilterImport_Form.Designer.cs">
+      <DependentUpon>FilterImport_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainPI_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainPI_Form.Designer.cs">
+      <DependentUpon>MainPI_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PlugIn_Cls.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Resources\bosale_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Base Forms\Editor\BaseEditor_Form.resx">
+      <DependentUpon>BaseEditor_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Base Forms\List\BaseList_Form.resx">
+      <DependentUpon>BaseList_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common Forms\DeleteDlg_Form.resx">
+      <DependentUpon>DeleteDlg_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common Forms\EditFurtherDescription_Form.resx">
+      <DependentUpon>EditFurtherDescription_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common Forms\FilterImport_Form.resx">
+      <DependentUpon>FilterImport_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainPI_Form.resx">
+      <DependentUpon>MainPI_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Close.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Close_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\close_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Control Panel 1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\exporttodoc_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\groupbydate_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ImpXls_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Installment.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Installment_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Installment_96.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\InstallmentTracking01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\InstallmentTracking01_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\InstallmentTracking01_96.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\InstallmentTracking02.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\InstallmentTracking02_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\InstallmentTracking02_96.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MachineMaster_128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MachineMaster_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MachineMaster_24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MachineMaster_256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MachineMaster_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MachineMaster_48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MachineMaster_512.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MachineMaster_64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MachineSchedule_128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MachineSchedule_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MachineSchedule_24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MachineSchedule_256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MachineSchedule_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MachineSchedule_48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MachineSchedule_512.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MachineSchedule_64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\removeitem_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\removeitem_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\saveto_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\showtestreport_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SlittingAdvice_128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SlittingAdvice_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SlittingAdvice_24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SlittingAdvice_256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SlittingAdvice_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SlittingAdvice_48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SlittingAdvice_512.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SlittingAdvice_64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SummaryReport.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SummaryReport_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SummaryReport_96.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\WorkOrder_128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\WorkOrder_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\WorkOrder_24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\WorkOrder_256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\WorkOrder_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\WorkOrder_48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\WorkOrder_512.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\WorkOrder_64.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -827,7 +827,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AutoCount-Plugin-Base\VTACPluginBase.csproj">
+    <ProjectReference Include="..\VTACPluginBase\VTACPluginBase.csproj">
       <Project>{4B29BA5B-1103-4801-8BB6-18BA86F1D9D8}</Project>
       <Name>VTACPluginBase</Name>
       <Private>True</Private>

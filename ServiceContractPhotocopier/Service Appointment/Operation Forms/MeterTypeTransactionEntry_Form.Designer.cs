@@ -56,6 +56,8 @@ namespace ServiceContractPhotocopier.ServiceAppointment.OperationForms
         private DevExpress.XtraEditors.SimpleButton BtnTickSelection;
         private DevExpress.XtraEditors.SimpleButton BtnSelectAll;
         private DevExpress.XtraEditors.SimpleButton BtnDeselectAll;
+        private DevExpress.XtraEditors.SimpleButton BtnFetchReading;
+        private DevExpress.XtraEditors.CheckEdit ChkSimulateFailure;
         private DevExpress.XtraGrid.GridControl GridMeter;
         private DevExpress.XtraGrid.Views.Grid.GridView GridViewMeter;
         private DevExpress.XtraGrid.Columns.GridColumn ColMeterType;
@@ -115,6 +117,8 @@ namespace ServiceContractPhotocopier.ServiceAppointment.OperationForms
             this.BtnTickSelection = new DevExpress.XtraEditors.SimpleButton();
             this.BtnSelectAll = new DevExpress.XtraEditors.SimpleButton();
             this.BtnDeselectAll = new DevExpress.XtraEditors.SimpleButton();
+            this.BtnFetchReading = new DevExpress.XtraEditors.SimpleButton();
+            this.ChkSimulateFailure = new DevExpress.XtraEditors.CheckEdit();
             this.GridMeter = new DevExpress.XtraGrid.GridControl();
             this.GridViewMeter = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.ColMeterType = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -526,6 +530,30 @@ namespace ServiceContractPhotocopier.ServiceAppointment.OperationForms
             this.BtnDeselectAll.Text = "Deselect All";
             this.BtnDeselectAll.Click += new System.EventHandler(this.OnDeselectAll);
             //
+            // BtnFetchReading
+            //
+            this.BtnFetchReading.Appearance.BackColor = System.Drawing.Color.FromArgb(76, 175, 80);
+            this.BtnFetchReading.Appearance.ForeColor = System.Drawing.Color.White;
+            this.BtnFetchReading.Appearance.Options.UseBackColor = true;
+            this.BtnFetchReading.Appearance.Options.UseForeColor = true;
+            this.BtnFetchReading.Location = new System.Drawing.Point(1074, 260);
+            this.BtnFetchReading.Name = "BtnFetchReading";
+            this.BtnFetchReading.Size = new System.Drawing.Size(110, 26);
+            this.BtnFetchReading.TabIndex = 9;
+            this.BtnFetchReading.Text = "Fetch Reading";
+            this.BtnFetchReading.Click += new System.EventHandler(this.OnFetchReading);
+            //
+            // ChkSimulateFailure (demo toggle — empty caption, tiny, near the Fetch button)
+            //
+            ((System.ComponentModel.ISupportInitialize)(this.ChkSimulateFailure.Properties)).BeginInit();
+            this.ChkSimulateFailure.Location = new System.Drawing.Point(1190, 264);
+            this.ChkSimulateFailure.Name = "ChkSimulateFailure";
+            this.ChkSimulateFailure.Properties.Caption = "";
+            this.ChkSimulateFailure.Size = new System.Drawing.Size(18, 19);
+            this.ChkSimulateFailure.TabIndex = 10;
+            this.ChkSimulateFailure.TabStop = false;
+            ((System.ComponentModel.ISupportInitialize)(this.ChkSimulateFailure.Properties)).EndInit();
+            //
             // GridMeter
             //
             this.GridMeter.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
@@ -779,6 +807,8 @@ namespace ServiceContractPhotocopier.ServiceAppointment.OperationForms
             this.Controls.Add(this.BtnTickSelection);
             this.Controls.Add(this.BtnSelectAll);
             this.Controls.Add(this.BtnDeselectAll);
+            this.Controls.Add(this.BtnFetchReading);
+            this.Controls.Add(this.ChkSimulateFailure);
             this.Controls.Add(this.GridMeter);
             this.Controls.Add(this.PanelStatus);
             //
